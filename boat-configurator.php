@@ -112,9 +112,8 @@ function boat_configurator_render_blocks_page() {
 
 
 // Include the file with the form submission handling function
-require_once plugin_dir_path( __FILE__ ) . 'form-submissions.php';
-
-require_once plugin_dir_path( __FILE__ ) . 'blocks-list.php';
-require_once plugin_dir_path( __FILE__ ) . 'form-entries-list.php';
-require_once plugin_dir_path( __FILE__ ) . 'boat-config-pattern.php';
-require_once plugin_dir_path( __FILE__ ) . 'boat-config-post-type.php';
+require_once plugin_dir_path( __FILE__ ) . 'src/front-end/form-submissions.php';
+require_once plugin_dir_path( __FILE__ ) . 'src/admin/blocks-list.php';
+require_once plugin_dir_path( __FILE__ ) . 'src/admin/form-entries-list.php';
+require_once plugin_dir_path( __FILE__ ) . 'src/includes/configurator/boat-config-pattern.php';
+require_once plugin_dir_path( __FILE__ ) . 'src/includes/configurator/boat-config-post-type.php';
