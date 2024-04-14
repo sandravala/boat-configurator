@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { TextControl, Button } from "@wordpress/components"
 
 const FormBlock = ({ fields }) => {
     // State to hold the form input values

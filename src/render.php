@@ -5,6 +5,15 @@
     $answers = isset($attributes['answers']) ? $attributes['answers'] : array();
 
     $form_id = isset($attributes['question']) ? $attributes['question'] : 'boat_config_form';
+    $thank_you_message = '';
+
+    echo 'Thank you parameter value: ' . $_GET['thank_you'];
+
+    if ( isset( $_GET['thank_you'] ) && $_GET['thank_you'] === '1' ) {
+        echo 'Thank you message: ' . $thank_you_message; // Debugging output
+        $thank_you_message = '<p>Thank you for your submission!</p>';
+        echo $thank_you_message; 
+    } else {
 
 ?>
     
@@ -38,3 +47,6 @@
             <button type="submit" name="submit_form" id="submit_form">Submit</button>
         </form>
     </div>
+
+<?php
+    } // End of if statement checking 'thank_you' parameter
