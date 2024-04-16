@@ -144,6 +144,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
+
 /**
  * The edit function describes the structure of your block in the context of the
  * editor. This represents what the editor will render when the block is used.
@@ -159,27 +160,69 @@ function Edit(props) {
       backgroundColor: props.attributes.bgColor
     }
   });
-  function updateQuestion(value) {
+  function updateModel(value) {
     props.setAttributes({
-      question: value
+      model: value
     });
   }
-  function deleteAnswer(indexToDelete) {
-    const newAnswers = props.attributes.answers.filter(function (x, index) {
+  function deleteQuestion(indexToDelete) {
+    const newQuestions = props.attributes.questions.filter(function (x, index) {
       return index != indexToDelete;
     });
     props.setAttributes({
-      answers: newAnswers
+      questions: newQuestions
     });
-    if (indexToDelete == props.attributes.correctAnswer) {
-      props.setAttributes({
-        correctAnswer: undefined
-      });
-    }
   }
-  function markAsCorrect(index) {
+  function deleteOption(questionIndex, optionIndexToDelete) {
+    const newQuestions = props.attributes.questions.map((question, index) => {
+      if (index === questionIndex) {
+        // If this is the question that contains the option to delete
+        const newOptions = question.options.filter((option, optionIndex) => {
+          return optionIndex !== optionIndexToDelete;
+        });
+        return {
+          ...question,
+          options: newOptions
+        };
+      }
+      return question;
+    });
     props.setAttributes({
-      correctAnswer: index
+      questions: newQuestions
+    });
+  }
+  function addNewQuestion() {
+    props.setAttributes({
+      questions: props.attributes.questions.concat([{
+        "text": "",
+        "options": [{
+          "text": "",
+          "imgUrl": ""
+        }]
+      }])
+    });
+  }
+  function addNewOption(questionIndex) {
+    // Get the current options for the specified question index
+    const currentOptions = props.attributes.questions[questionIndex].options;
+
+    // Create a new array of options by concatenating a new empty option object
+    const newOptions = [...currentOptions, {
+      "text": "",
+      "imgUrl": ""
+    }];
+
+    // Update the questions attribute with the new options array
+    props.setAttributes({
+      questions: props.attributes.questions.map((question, index) => {
+        if (index === questionIndex) {
+          return {
+            ...question,
+            options: newOptions
+          };
+        }
+        return question;
+      })
     });
   }
   return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
@@ -202,9 +245,9 @@ function Edit(props) {
     }),
     disableAlpha: true
   })))), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_4__.TextControl, {
-    label: "Question:",
-    value: props.attributes.question,
-    onChange: updateQuestion,
+    label: "Model:",
+    value: props.attributes.model,
+    onChange: updateModel,
     style: {
       fontSize: "20px"
     }
@@ -213,34 +256,100 @@ function Edit(props) {
       fontSize: "13px",
       margin: "20px 0 8px 0"
     }
-  }, "Answers:"), props.attributes.answers.map(function (answer, index) {
-    return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_4__.Flex, null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_4__.FlexBlock, null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_4__.TextControl, {
-      value: answer,
+  }, "Questions:"), props.attributes.questions.map(function (question, questionIndex) {
+    return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_4__.Flex, {
+      className: "question-container"
+    }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_4__.FlexBlock, null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_4__.TextControl, {
+      value: question.text,
       onChange: newValue => {
-        const newAnswers = props.attributes.answers.concat([]);
-        newAnswers[index] = newValue;
+        const newQuestions = [...props.attributes.questions]; // Create a copy of the questions array
+        newQuestions[questionIndex].text = newValue; // Update the text of the question at the specified index
         props.setAttributes({
-          answers: newAnswers
+          questions: newQuestions
+        }); // Set the updated questions array in the attributes
+      }
+    }), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+      class: "container"
+    }, question.options.map((option, optionIndex) => (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("label", null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("input", {
+      type: "radio",
+      name: option.optionText,
+      value: option.optionText,
+      id: optionIndex
+    }), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+      class: "card"
+    }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
+      class: "dashicons dashicons-no delete-option",
+      onClick: () => deleteOption(questionIndex, optionIndex)
+    }), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+      class: "top-text"
+    }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+      class: "option"
+    }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_4__.TextControl, {
+      value: option.optionText,
+      onChange: newValue => {
+        const newQuestions = [...props.attributes.questions];
+        newQuestions[questionIndex].options[optionIndex].optionText = newValue;
+        props.setAttributes({
+          questions: newQuestions
         });
       }
-    })), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_4__.FlexItem, null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_4__.Button, {
-      onClick: () => markAsCorrect(index)
-    }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_4__.Icon, {
-      className: "mark-as-correct",
-      icon: props.attributes.correctAnswer == index ? "star-filled" : "star-empty"
-    }))), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_4__.FlexItem, null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_4__.Button, {
-      isLink: true,
-      className: "attention-delete",
-      onClick: () => deleteAnswer(index)
-    }, "Delete")));
+    }))), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+      class: "img"
+    }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_2__.MediaUpload, {
+      onSelect: image => {
+        props.setAttributes({
+          imageURL: image.url
+        });
+      },
+      allowedTypes: ['image'],
+      value: props.attributes.imageURL,
+      render: ({
+        open
+      }) => (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("img", {
+        src: props.attributes.imageURL || 'https://via.placeholder.com/100x100/e8e8e8/ffffff&text=add image',
+        alt: "Option 2",
+        style: {
+          cursor: 'pointer'
+        },
+        onClick: open
+      })
+    }))))), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+      class: "card-plus"
+    }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
+      class: "dashicons dashicons-insert add-option",
+      onClick: () => addNewOption(questionIndex)
+    })))), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_4__.FlexItem, {
+      className: "delete-question"
+    }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
+      class: "dashicons dashicons-trash delete-btn",
+      onClick: () => deleteQuestion(questionIndex)
+    })));
   }), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_4__.Button, {
-    onClick: () => {
-      props.setAttributes({
-        answers: props.attributes.answers.concat([""])
-      });
-    }
-  }, "Add another answer")));
+    onClick: () => addNewQuestion()
+  }, "Add another question")));
 }
+
+//5. Laivo konfiguracijos pasirinkimai:
+
+// Konkrečių dar neturime. Tad surašau preleminarius
+// Variklis
+// 50ag
+// 100ag
+// 150ag
+// Stogelis
+// Sulankstomas
+// nėra stogelio
+// Vidaus medžiagos spalva
+// Gelsva
+// Pilka
+// Rožinė
+// Garso aparatūra
+// Nėra
+// Bazinė
+// Pagerinta
+// Navigacija
+// Garmin
+// Kinietiška
 
 /***/ }),
 
@@ -16324,7 +16433,7 @@ function validateWCAG2Parms(parms) {
 /***/ ((module) => {
 
 "use strict";
-module.exports = /*#__PURE__*/JSON.parse('{"$schema":"https://schemas.wp.org/trunk/block.json","apiVersion":3,"name":"create-block/boat-configurator","version":"0.1.0","title":"Boat Configurator","category":"text","icon":"admin-generic","description":"Example block scaffolded with Create Block tool.","example":{},"supports":{"html":false},"textdomain":"boat-configurator","editorScript":"file:./index.js","editorStyle":"file:./index.css","style":"file:./style-index.css","viewScript":"file:./view.js","attributes":{"question":{"type":"string"},"answers":{"type":"array","default":[""]},"correctAnswer":{"type":"number","default":"undefined"},"bgColor":{"type":"string","default":"#EBEBEB"},"theAlignment":{"type":"string","default":"left"}},"render":"file:./render.php"}');
+module.exports = /*#__PURE__*/JSON.parse('{"$schema":"https://schemas.wp.org/trunk/block.json","apiVersion":3,"name":"create-block/boat-configurator","version":"0.1.0","title":"Boat Configurator","category":"text","icon":"admin-generic","description":"Example block scaffolded with Create Block tool.","example":{},"supports":{"html":false},"textdomain":"boat-configurator","editorScript":"file:./index.js","editorStyle":"file:./index.css","style":"file:./style-index.css","viewScript":"file:./view.js","attributes":{"model":{"type":"string"},"questions":{"type":"array","default":[{"text":"","options":[{"optionText":"","imgUrl":""}]}]},"bgColor":{"type":"string","default":"#EBEBEB"},"theAlignment":{"type":"string","default":"left"}},"render":"file:./render.php"}');
 
 /***/ })
 

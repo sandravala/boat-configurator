@@ -72,6 +72,7 @@ document.addEventListener('DOMContentLoaded', function () {
   };
   const handleSubmit = event => {
     event.preventDefault();
+    event.target.disabled = true;
     const emailInput = document.getElementById('email-input').value;
     const errorMessage = document.getElementById('email-error');
     if (!validateEmail(emailInput)) {

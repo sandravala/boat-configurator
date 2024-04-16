@@ -2,9 +2,18 @@
     $block_wrapper_attributes = get_block_wrapper_attributes();
     //wp_send_json( $block_wrapper_attributes );
 
-    $answers = isset($attributes['answers']) ? $attributes['answers'] : array();
+    $questions = isset($attributes['questions']) ? $attributes['questions'] : array();
 
-    $form_id = isset($attributes['question']) ? $attributes['question'] : 'boat_config_form';
+    $form_id = isset($attributes['model']) ? $attributes['model'] : 'boat_config_form';
+    $thank_you_message = '';
+
+    echo 'Thank you parameter value: ' . $_GET['thank_you'];
+
+    if ( isset( $_GET['thank_you'] ) && $_GET['thank_you'] === '1' ) {
+        echo 'Thank you message: ' . $thank_you_message; // Debugging output
+        $thank_you_message = '<p>Thank you for your submission!</p>';
+        echo $thank_you_message; 
+    } else {
 
 ?>
     
@@ -18,15 +27,28 @@
        
             <?php
                 // Loop through answers and create input fields
-                foreach ($answers as $index => $answer) {
+                foreach ($questions as $index => $question) {
                     // Generate unique input name and ID
                     $input_name = 'input_' . $index;
                     $input_id = 'input_' . $index;
             ?>
                 <div>
-                    <label for="<?php echo $input_id; ?>"><?php echo $answer; ?>:</label>
+                    <label for="<?php echo $input_id; ?>"><?php echo $question; ?>:</label>
                     <input type="text" id="<?php echo $input_id; ?>" name="<?php echo $input_name; ?>" value="">
                 </div>
+
+                <!-- <div>
+									<label>
+										<input
+											type="radio"
+											name='test' // Use a unique name for each group of radio buttons
+											value="small"
+											id='radio1'
+										/>
+										<img src="https://via.placeholder.com/40x60/0bf/fff&text=A" alt="Option 1" />
+									</label>
+                </div> -->
+
             <?php
                 }
             ?>
@@ -38,3 +60,6 @@
             <button type="submit" name="submit_form" id="submit_form">Submit</button>
         </form>
     </div>
+
+<?php
+    } // End of if statement checking 'thank_you' parameter

@@ -17,9 +17,21 @@
 	"style": "file:./style-index.css",
 	"viewScript": "file:./view.js",
 	"attributes": {
-		"question": { "type": "string" },
-		"answers": { "type": "array", "default": [""] },
-		"correctAnswer": { "type": "number", "default": "undefined" },
+		"model": { "type": "string" },
+		"questions": {
+			"type": "array",
+			"default": [
+			  {
+				"text": "",
+				"options": [
+					{
+						"optionText": "",
+						"imgUrl": ""
+					}
+				] 
+			  }
+			]
+		  },
 		"bgColor": { "type": "string", "default": "#EBEBEB" },
 		"theAlignment": { "type": "string", "default": "left" }
 	  },

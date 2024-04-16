@@ -109,18 +109,6 @@ function boat_configurator_add_admin_menu() {
 }
 add_action('admin_menu', 'boat_configurator_add_admin_menu');
 
-// Function to render the Blocks Used admin page
-function boat_configurator_render_blocks_page() {
-    // Render the content of the Blocks Used admin page here
-    echo '<div class="wrap"><h1>Blocks Used</h1><p>This is where you can see the blocks used.</p></div>';
-}
-
-// Function to render the Form Entries admin page
-// function boat_configurator_render_entries_page() {
-//     // Render the content of the Form Entries admin page here
-//     echo '<div class="wrap"><h1>Form Entries</h1><p>This is where you can see the form entries.</p></div>';
-// }
-
 function custom_column_for_custom_post_type( $columns ) {
     // Add a new column with a custom heading
     $columns['custom_column'] = 'Nuoroda';

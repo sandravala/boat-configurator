@@ -17,18 +17,22 @@
   "style": "file:./style-index.css",
   "viewScript": "file:./view.js",
   "attributes": {
-    "question": {
+    "model": {
       "type": "string"
     },
-    "answers": {
+    "questions": {
       "type": "array",
       "default": [
-        ""
+        {
+          "text": "",
+          "options": [
+            {
+              "optionText": "",
+              "imgUrl": ""
+            }
+          ]
+        }
       ]
-    },
-    "correctAnswer": {
-      "type": "number",
-      "default": "undefined"
     },
     "bgColor": {
       "type": "string",
