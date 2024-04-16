@@ -38,13 +38,13 @@ function cpt_register_post_type()
 		'show_ui'            => true,
 		'show_in_menu'       => false,
 		'query_var'          => true,
-		'rewrite'            => array( 'slug' => 'boat-config' ),
+		'rewrite'            => array( 'slug' => 'boat-configurator' ),
 		'capability_type'    => 'page',
 		'has_archive'        => true,
         'show_in_rest'          => true,
 		//'hierarchical'       => false,
 		//'menu_position'      => null,
-		'supports'           => array( 'title', 'editor', 'author', 'thumbnail', 'excerpt', 'comments' ),
+		'supports'           => array( ),
         'template'              => array(
             array(
                 'core/pattern',
@@ -60,4 +60,30 @@ function cpt_register_post_type()
 
 add_action('init', 'cpt_register_post_type');
 
+// function configurator_template($template) {
+//     if (is_singular('boat_config')) {
+//         $custom_template = plugin_dir_path(__FILE__) . 'templates/single-boat-config.html';
+//         if (file_exists($custom_template)) {
+//             return $custom_template;
+//         }
+//     }
+//     return $template;
+// }
+// add_filter('template_include', 'configurator_template');
+
+// add_filter( 'template_include', 'configurator_template' );
+// function configurator_template( $template ) {
+
+//     $post_type = 'boat_config'; // Change this to the name of your custom post type!
+
+//     if ( is_post_type_archive( $post_type ) && file_exists( plugin_dir_path(__DIR__) . "templates/archive-$post_type.php" ) ){
+//         $template = plugin_dir_path(__DIR__) . "templates/archive-$post_type.php";
+//     }
+
+//     if ( is_singular( $post_type ) && file_exists( plugin_dir_path(__DIR__) . "templates/single-$post_type.php" ) ){
+//         $template = plugin_dir_path(__DIR__) . "templates/single-$post_type.php";
+//     }
+
+//     return $template;
+// }
 

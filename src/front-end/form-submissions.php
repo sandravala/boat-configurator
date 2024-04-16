@@ -1,4 +1,6 @@
 <?php
+
+use MailerLite\Mailerlite;
 add_action('admin_post_nopriv_handle_form_submission', 'handle_form_submission');
 add_action('admin_post_handle_form_submission', 'handle_form_submission');
 
@@ -25,6 +27,17 @@ function handle_form_submission() {
         $message = 'A new form submission has been received.';
 
         wp_mail($admin_email, $subject, $message);
+        
+        $apiKey = MAILERLITE_KEY;
+
+        error_log($apiKey);
+        $mailerLite = new MailerLite(['api_key' =>  $apiKey]);
+
+        $data = [
+            'email' => 'subscriber@example.com',
+        ];
+
+        $response = $mailerLite->subscribers->create($data);
 
         wp_redirect(add_query_arg('thank_you', '1', $_POST['_wp_http_referer']));
         //wp_redirect(plugin_dir_url(__FILE__) . 'thank-you.php');
@@ -37,6 +50,8 @@ function handle_form_submission() {
     }
 
     // Check if the form has been submitted
+
+       
 
 }
 

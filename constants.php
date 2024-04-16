@@ -1,5 +1,7 @@
 <?php
 
+define('MAILERLITE_KEY', '');
+
 define( 'DB_TABLE', 'boat_config_table' );
 define( 'CONFIG_ICON', plugin_dir_url( __FILE__ ) . 'src/assets/icon.svg');
 define('BOAT_CONFIG_PATTERN', 

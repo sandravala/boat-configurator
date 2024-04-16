@@ -48,10 +48,8 @@ Stay informed about WordPress security advisories and apply recommended security
 
 Integration with MailerLite API:
 
-First, you'll need to register for a MailerLite account if you haven't already done so.
-Once you have your MailerLite account, you'll need to generate an API key from your MailerLite account settings.
-Then, you can use the MailerLite API to subscribe users to your mailing list. You'll typically make a POST request to the MailerLite API endpoint with the user's email and any other required parameters.
-You can integrate this functionality into your handle_form_submission() function where you currently save the form data to the database. After saving the form data, you can make a request to the MailerLite API to subscribe the user.
+
+
 Plugin Update:
 
 To implement plugin updates with automatic table creation, you'll need to handle versioning in your plugin.
@@ -59,6 +57,7 @@ Start by adding a version number to your plugin. This can be a constant defined 
 When you release an update to your plugin, increment the version number in your plugin file.
 In your plugin's main file (boat-configurator.php), you can use WordPress hooks like plugins_loaded or admin_init to check the current plugin version against the version stored in the database. If the stored version is lower than the current version, perform any necessary update tasks, such as creating or updating database tables.
 You'll also need to handle database table creation/update in your plugin activation hook (register_activation_hook()).
+
 Frontend Enhancements:
 
 For frontend enhancements like validation messages and a custom thank you page, you'll need to modify your block's JavaScript file (form_front_end.js) to include client-side form validation and to handle form submission.
