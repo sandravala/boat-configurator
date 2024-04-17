@@ -8,8 +8,8 @@
  * Replace them with your own styles or remove the file completely.
  */
 .wp-block-create-block-boat-configurator {
-  background-color: #21759b;
-  color: #fff;
+  background-color: rgba(255, 255, 255, 0);
+  color: #000000;
   padding: 2px;
 }
 

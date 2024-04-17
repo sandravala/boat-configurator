@@ -18,22 +18,36 @@
 	"viewScript": "file:./view.js",
 	"attributes": {
 		"model": { "type": "string" },
-		"questions": {
+		  "questions": {
 			"type": "array",
 			"default": [
-			  {
-				"text": "",
-				"options": [
-					{
-						"optionText": "",
-						"imgUrl": ""
+				{
+					"text": "",
+					"options": [
+						{
+							"text": "",
+							"imgUrl": ""
+						}
+					]
+				}
+			],
+			"items": {
+				"type": "object",
+				"properties": {
+					"text": { "type": "string" },
+					"options": {
+						"type": "array",
+						"items": {
+							"type": "object",
+							"properties": {
+								"text": { "type": "string" },
+								"imgUrl": { "type": "string" }
+							}
+						}
 					}
-				] 
-			  }
-			]
-		  },
-		"bgColor": { "type": "string", "default": "#EBEBEB" },
-		"theAlignment": { "type": "string", "default": "left" }
+				}
+			}
+		}
 	  },
 	"render": "file:./render.php"
 }

@@ -27,20 +27,34 @@
           "text": "",
           "options": [
             {
-              "optionText": "",
+              "text": "",
               "imgUrl": ""
             }
           ]
         }
-      ]
-    },
-    "bgColor": {
-      "type": "string",
-      "default": "#EBEBEB"
-    },
-    "theAlignment": {
-      "type": "string",
-      "default": "left"
+      ],
+      "items": {
+        "type": "object",
+        "properties": {
+          "text": {
+            "type": "string"
+          },
+          "options": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "text": {
+                  "type": "string"
+                },
+                "imgUrl": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "render": "file:./render.php"

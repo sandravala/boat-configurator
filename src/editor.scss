@@ -5,7 +5,8 @@
  */
 
 .wp-block-create-block-boat-configurator {
-	border: 1px dotted #f00;
+	border: 1px dotted rgb(0, 195, 255);
+	border-radius: .5em;
 	padding: 2%;
 }
 
@@ -45,9 +46,9 @@
 	border-radius: 0.8rem;
   }
   .card-plus{
-	height: 320px;
-	max-width: 350px;
-	margin: 0 20px;
+	max-height: max-content;
+	max-width: max-content;
+	margin: 50px;
 	transition: 0.4s;
   }
 
@@ -82,8 +83,6 @@
   span.add-option {
 	font-size: 100px;
     color: #8080808c;
-    padding-top: 100px;
-	padding-left: 50px;
 	cursor: pointer;
   }
 
@@ -104,6 +103,33 @@
   .delete-btn {
 	cursor: pointer;
   }
+
+  .accordion {
+	border: 1px solid #ccc;
+	margin-bottom: 20px;
+	border-radius: .8em;
+  }
+  
+  .accordion-header {
+	padding: 10px;
+	background-color: #e6e6e6;
+	color:#030303;
+	cursor: pointer;
+	border-top-left-radius: .8em;
+	border-top-right-radius: .8em;
+  }
+
+  .accordion-header.closed {
+	border-radius: .8em;
+  }
+
+  .accordion-content {
+	padding: 10px;
+	background-color: #e6e6e6;
+	margin-top: .5em;
+	border-radius: .8em;
+  }
+  
 
   @media screen and (max-width: 978px) {
 	.container{

@@ -145,6 +145,8 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
+// import { useState } from '@wordpress/components';
+
 /**
  * The edit function describes the structure of your block in the context of the
  * editor. This represents what the editor will render when the block is used.
@@ -154,11 +156,15 @@ __webpack_require__.r(__webpack_exports__);
  * @return {Element} Element to render.
  */
 function Edit(props) {
+  const [accordionStates, setAccordionStates] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)({});
+  function toggleAccordion(questionIndex) {
+    setAccordionStates(prevState => ({
+      ...prevState,
+      [questionIndex]: !prevState[questionIndex]
+    }));
+  }
   const blockProps = (0,_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_2__.useBlockProps)({
-    className: "paying-attention-edit-block",
-    style: {
-      backgroundColor: props.attributes.bgColor
-    }
+    className: "boat-config-edit-block"
   });
   function updateModel(value) {
     props.setAttributes({
@@ -225,26 +231,20 @@ function Edit(props) {
       })
     });
   }
+
+  // function toggleAccordion(questionIndex) {
+  // 	const newQuestions = props.attributes.questions.map((question, index) => {
+  // 	  if (index === questionIndex) {
+  // 		return { ...question, isOpen: !question.isOpen };
+  // 	  }
+  // 	  return question;
+  // 	});
+  // 	props.setAttributes({ questions: newQuestions });
+  // }
+
   return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    ...(0,_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_2__.useBlockProps)(),
-    style: {
-      backgroundColor: props.attributes.bgColor
-    }
-  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_2__.BlockControls, null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_2__.AlignmentToolbar, {
-    value: props.attributes.theAlignment,
-    onChange: x => props.setAttributes({
-      theAlignment: x
-    })
-  })), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_2__.InspectorControls, null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_4__.PanelBody, {
-    title: "Background Color",
-    initialOpen: true
-  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_4__.PanelRow, null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_color__WEBPACK_IMPORTED_MODULE_5__.ChromePicker, {
-    color: props.attributes.bgColor,
-    onChangeComplete: x => props.setAttributes({
-      bgColor: x.hex
-    }),
-    disableAlpha: true
-  })))), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_4__.TextControl, {
+    ...(0,_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_2__.useBlockProps)()
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_4__.TextControl, {
     label: "Model:",
     value: props.attributes.model,
     onChange: updateModel,
@@ -257,7 +257,21 @@ function Edit(props) {
       margin: "20px 0 8px 0"
     }
   }, "Questions:"), props.attributes.questions.map(function (question, questionIndex) {
-    return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_4__.Flex, {
+    //const [isActive, setIsActive] = useState(false);
+    const isActive = accordionStates[questionIndex] || false;
+    return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+      key: questionIndex,
+      className: "accordion"
+    }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+      className: `accordion-header ${!isActive ? 'closed' : ''}`,
+      onClick: () => toggleAccordion(questionIndex)
+    }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_4__.Flex, null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_4__.FlexItem, null, question.text), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_4__.FlexItem, null, isActive ? (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
+      class: "dashicons dashicons-arrow-up-alt2"
+    }) : (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
+      class: "dashicons dashicons-arrow-down-alt2"
+    })))), isActive && (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+      className: "accordion-content"
+    }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_4__.Flex, {
       className: "question-container"
     }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_4__.FlexBlock, null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_4__.TextControl, {
       value: question.text,
@@ -323,7 +337,7 @@ function Edit(props) {
     }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
       class: "dashicons dashicons-trash delete-btn",
       onClick: () => deleteQuestion(questionIndex)
-    })));
+    }))), "Your collapsible text area content goes here."));
   }), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_4__.Button, {
     onClick: () => addNewQuestion()
   }, "Add another question")));
@@ -16433,7 +16447,7 @@ function validateWCAG2Parms(parms) {
 /***/ ((module) => {
 
 "use strict";
-module.exports = /*#__PURE__*/JSON.parse('{"$schema":"https://schemas.wp.org/trunk/block.json","apiVersion":3,"name":"create-block/boat-configurator","version":"0.1.0","title":"Boat Configurator","category":"text","icon":"admin-generic","description":"Example block scaffolded with Create Block tool.","example":{},"supports":{"html":false},"textdomain":"boat-configurator","editorScript":"file:./index.js","editorStyle":"file:./index.css","style":"file:./style-index.css","viewScript":"file:./view.js","attributes":{"model":{"type":"string"},"questions":{"type":"array","default":[{"text":"","options":[{"optionText":"","imgUrl":""}]}]},"bgColor":{"type":"string","default":"#EBEBEB"},"theAlignment":{"type":"string","default":"left"}},"render":"file:./render.php"}');
+module.exports = /*#__PURE__*/JSON.parse('{"$schema":"https://schemas.wp.org/trunk/block.json","apiVersion":3,"name":"create-block/boat-configurator","version":"0.1.0","title":"Boat Configurator","category":"text","icon":"admin-generic","description":"Example block scaffolded with Create Block tool.","example":{},"supports":{"html":false},"textdomain":"boat-configurator","editorScript":"file:./index.js","editorStyle":"file:./index.css","style":"file:./style-index.css","viewScript":"file:./view.js","attributes":{"model":{"type":"string"},"questions":{"type":"array","default":[{"text":"","options":[{"text":"","imgUrl":""}]}],"items":{"type":"object","properties":{"text":{"type":"string"},"options":{"type":"array","items":{"type":"object","properties":{"text":{"type":"string"},"imgUrl":{"type":"string"}}}}}}}},"render":"file:./render.php"}');
 
 /***/ })
 
