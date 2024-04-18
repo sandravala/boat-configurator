@@ -46,26 +46,14 @@ export default function Edit(props) {
 	}
 
 
-	const [colorPickerStates, setColorPickerStates] = useState(false);
+	const [colorPickerStates, setColorPickerStates] = useState(Array.from({ length: props.attributes.questions.length }, () => []));
 
-	// function openColorPicker(questionIndex, optionIndex) {
-	// 	setColorPickerStates(prevState => {
-	// 		// Create a copy of the outer array
-	// 		const newState = [...prevState];
-	// 		// Create a copy of the inner array for the specific question
-	// 		newState[questionIndex] = [...prevState[questionIndex]];
-	// 		// Toggle the state for the specified option
-	// 		newState[questionIndex][optionIndex] = !prevState[questionIndex][optionIndex];
-	// 		return newState;
-	// 	});
-	// }
-
-	function openColorPicker() {
-		setColorPickerStates(true);
-	}
-
-	function closeColorPicker() {
-		setColorPickerStates(false);
+	function openColorPicker(questionIndex, optionIndex) {
+		setColorPickerStates(prevState => {
+			const newState = [...prevState];
+			newState[questionIndex][optionIndex] = !prevState[questionIndex][optionIndex];
+			return newState;
+		});
 	}
 
 	const blockProps = useBlockProps({
@@ -81,6 +69,12 @@ export default function Edit(props) {
 			return index != indexToDelete
 		})
 		props.setAttributes({ questions: newQuestions })
+
+		setColorPickerStates(prevState => {
+			// Filter out the array at the index of the question you want to delete
+			const newState = prevState.filter((_, indexState) => indexState !== indexToDelete);
+			return newState;
+		});
 
 	}
 
@@ -107,6 +101,7 @@ export default function Edit(props) {
 				"options": [{ "text": "", "imgUrl": "", "color": "" }]
 			}])
 		})
+		setColorPickerStates(prevState => [...prevState, []]);
 	}
 
 	function addNewOption(questionIndex) {
@@ -236,7 +231,7 @@ export default function Edit(props) {
 
 														<div class="container">
 															{question.options.map((option, optionIndex) => {
-																const isColorPickerOpen = colorPickerStates || false;
+
 																return (
 																	<div class="card">
 																		<span class="dashicons dashicons-no delete-option" onClick={() => deleteOption(questionIndex, optionIndex)}></span>
@@ -271,9 +266,9 @@ export default function Edit(props) {
 																					<span class="dashicons dashicons-format-image" onClick={open}></span>
 																				)}
 																			/>
-																			<span class="dashicons dashicons-color-picker" onClick={() => openColorPicker()}></span>
-																			{isColorPickerOpen && (
-																				<Modal title="Pick the color" onRequestClose={() => closeColorPicker()}>
+																			<span class="dashicons dashicons-color-picker" onClick={() => openColorPicker(questionIndex, optionIndex)}></span>
+																			{colorPickerStates[questionIndex][optionIndex] && (
+																				<Modal title="Pick the color" onRequestClose={() => openColorPicker(questionIndex, optionIndex)}>
 																					<ColorPicker
 																						color={option.color}
 																						onChange={(newColor) => {

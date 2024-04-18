@@ -64,25 +64,15 @@ function Edit(props) {
       [questionIndex]: !prevState[questionIndex]
     }));
   }
-  const [colorPickerStates, setColorPickerStates] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false);
-
-  // function openColorPicker(questionIndex, optionIndex) {
-  // 	setColorPickerStates(prevState => {
-  // 		// Create a copy of the outer array
-  // 		const newState = [...prevState];
-  // 		// Create a copy of the inner array for the specific question
-  // 		newState[questionIndex] = [...prevState[questionIndex]];
-  // 		// Toggle the state for the specified option
-  // 		newState[questionIndex][optionIndex] = !prevState[questionIndex][optionIndex];
-  // 		return newState;
-  // 	});
-  // }
-
-  function openColorPicker() {
-    setColorPickerStates(true);
-  }
-  function closeColorPicker() {
-    setColorPickerStates(false);
+  const [colorPickerStates, setColorPickerStates] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(Array.from({
+    length: props.attributes.questions.length
+  }, () => []));
+  function openColorPicker(questionIndex, optionIndex) {
+    setColorPickerStates(prevState => {
+      const newState = [...prevState];
+      newState[questionIndex][optionIndex] = !prevState[questionIndex][optionIndex];
+      return newState;
+    });
   }
   const blockProps = (0,_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_2__.useBlockProps)({
     className: "boat-config-edit-block"
@@ -98,6 +88,11 @@ function Edit(props) {
     });
     props.setAttributes({
       questions: newQuestions
+    });
+    setColorPickerStates(prevState => {
+      // Filter out the array at the index of the question you want to delete
+      const newState = prevState.filter((_, indexState) => indexState !== indexToDelete);
+      return newState;
     });
   }
   function deleteOption(questionIndex, optionIndexToDelete) {
@@ -129,6 +124,7 @@ function Edit(props) {
         }]
       }])
     });
+    setColorPickerStates(prevState => [...prevState, []]);
   }
   function addNewOption(questionIndex) {
     // Get the current options for the specified question index
@@ -266,7 +262,6 @@ function Edit(props) {
     }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
       class: "container"
     }, question.options.map((option, optionIndex) => {
-      const isColorPickerOpen = colorPickerStates || false;
       return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
         class: "card"
       }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
@@ -313,10 +308,10 @@ function Edit(props) {
         })
       }), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
         class: "dashicons dashicons-color-picker",
-        onClick: () => openColorPicker()
-      }), isColorPickerOpen && (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_4__.Modal, {
+        onClick: () => openColorPicker(questionIndex, optionIndex)
+      }), colorPickerStates[questionIndex][optionIndex] && (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_4__.Modal, {
         title: "Pick the color",
-        onRequestClose: () => closeColorPicker()
+        onRequestClose: () => openColorPicker(questionIndex, optionIndex)
       }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_4__.ColorPicker, {
         color: option.color,
         onChange: newColor => {
