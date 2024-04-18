@@ -28,7 +28,8 @@
           "options": [
             {
               "text": "",
-              "imgUrl": ""
+              "imgUrl": "",
+              "color": ""
             }
           ]
         }
@@ -48,6 +49,9 @@
                   "type": "string"
                 },
                 "imgUrl": {
+                  "type": "string"
+                },
+                "color": {
                   "type": "string"
                 }
               }

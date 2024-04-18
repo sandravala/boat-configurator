@@ -7,8 +7,8 @@ define( 'CONFIG_ICON', plugin_dir_url( __FILE__ ) . 'src/assets/icon.svg');
 define('BOAT_CONFIG_PATTERN', 
 '<!-- wp:columns {"align":"wide","style":{"spacing":{"blockGap":{"top":"0","left":"var:preset|spacing|10"},"padding":{"right":"var:preset|spacing|20","left":"var:preset|spacing|20"}}}} -->
 <div class="wp-block-columns alignwide" style="padding-right:var(--wp--preset--spacing--20);padding-left:var(--wp--preset--spacing--20)"><!-- wp:column {"verticalAlignment":"stretch","width":"70%","layout":{"type":"constrained","justifyContent":"right","contentSize":"100%"}} -->
-<div class="wp-block-column is-vertically-aligned-stretch" style="flex-basis:70%"><!-- wp:image {"id":217,"aspectRatio":"1.7777777777777777","scale":"cover","sizeSlug":"full","linkDestination":"none","className":"is-style-default"} -->
-<figure class="wp-block-image size-full is-style-default"><img src="http://hendrixon.local/wp-content/uploads/2023/11/pexels-darryl-hentrich-12648084-edited.jpg" alt="" class="wp-image-217" style="aspect-ratio:1.7777777777777777;object-fit:cover"/></figure>
+<div class="wp-block-column is-vertically-aligned-stretch" style="flex-basis:70%"><!-- wp:image {"id":217,"aspectRatio":"1.7777777777777777","scale":"cover","sizeSlug":"full","linkDestination":"none","style":{"border":{"radius":"0.8em"}},"className":"is-style-default"} -->
+<figure class="wp-block-image size-full has-custom-border is-style-default"><img src="http://hendrixon.local/wp-content/uploads/2023/11/pexels-darryl-hentrich-12648084-edited.jpg" alt="" class="wp-image-217" style="border-radius:0.8em;aspect-ratio:1.7777777777777777;object-fit:cover"/></figure>
 <!-- /wp:image --></div>
 <!-- /wp:column -->
 

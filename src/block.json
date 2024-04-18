@@ -26,7 +26,8 @@
 					"options": [
 						{
 							"text": "",
-							"imgUrl": ""
+							"imgUrl": "",
+							"color": ""
 						}
 					]
 				}
@@ -41,7 +42,8 @@
 							"type": "object",
 							"properties": {
 								"text": { "type": "string" },
-								"imgUrl": { "type": "string" }
+								"imgUrl": { "type": "string" },
+								"color": { "type": "string" }
 							}
 						}
 					}

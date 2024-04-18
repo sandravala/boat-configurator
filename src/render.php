@@ -18,7 +18,7 @@
 ?>
     
     <div <?php echo $block_wrapper_attributes; ?>>
-        <h2>Custom Form Block</h2>
+        <h2><?php echo $attributes['model']; ?></h2>
         <form method="post" action="<?php echo admin_url('admin-post.php'); ?>" id="<?php echo $form_id ?>" class="boat-config-form">
         <?php wp_nonce_field( 'boat_configurator_form_submit_action', 'boat_configurator_nonce_'. $form_id ); ?>
         <input type="hidden" name="action" value="handle_form_submission">
@@ -63,3 +63,38 @@
 
 <?php
     } // End of if statement checking 'thank_you' parameter
+
+
+
+// cia vietoj radio card
+// <div class="container">
+//     <label>
+//         <input
+//             type="radio"
+//             name={option.optionText}
+//             value={option.optionText}
+//             id={optionIndex}
+//         />
+//         <div class="card">
+//             <span class="dashicons dashicons-no delete-option" onClick={() => deleteOption(questionIndex, optionIndex)}></span>
+
+//             <div class="top-text">
+//             </div>
+
+//             <div class="img">
+
+
+//                         <img
+//                             src={props.attributes.imageURL || 'https://via.placeholder.com/100x100/e8e8e8/ffffff&text=add image'}
+//                             alt="Option 2"
+//                             style={{ cursor: 'pointer' }}
+//                             onClick={open}
+//                         />
+
+
+//             </div>
+
+//         </div>
+//     </label>
+
+

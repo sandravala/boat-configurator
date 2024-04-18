@@ -21,11 +21,10 @@ import { InspectorControls, BlockControls, AlignmentToolbar, useBlockProps } fro
  */
 import './editor.scss';
 
-import { TextControl, Flex, FlexBlock, FlexItem, Button, Icon, PanelBody, PanelRow, SelectControl, ColorPicker } from "@wordpress/components"
-import { ChromePicker } from "react-color"
+import { TextControl, Flex, FlexBlock, FlexItem, Button, Icon, PanelBody, PanelRow, SelectControl, ColorPicker, Modal } from "@wordpress/components"
 import { MediaUpload } from '@wordpress/block-editor';
 import { useState } from 'react';
-// import { useState } from '@wordpress/components';
+
 
 /**
  * The edit function describes the structure of your block in the context of the
@@ -39,14 +38,35 @@ export default function Edit(props) {
 
 	const [accordionStates, setAccordionStates] = useState({});
 
-    function toggleAccordion(questionIndex) {
-        setAccordionStates(prevState => ({
-            ...prevState,
-            [questionIndex]: !prevState[questionIndex]
-        }));
-    }
+	function toggleAccordion(questionIndex) {
+		setAccordionStates(prevState => ({
+			...prevState,
+			[questionIndex]: !prevState[questionIndex]
+		}));
+	}
 
 
+	const [colorPickerStates, setColorPickerStates] = useState(false);
+
+	// function openColorPicker(questionIndex, optionIndex) {
+	// 	setColorPickerStates(prevState => {
+	// 		// Create a copy of the outer array
+	// 		const newState = [...prevState];
+	// 		// Create a copy of the inner array for the specific question
+	// 		newState[questionIndex] = [...prevState[questionIndex]];
+	// 		// Toggle the state for the specified option
+	// 		newState[questionIndex][optionIndex] = !prevState[questionIndex][optionIndex];
+	// 		return newState;
+	// 	});
+	// }
+
+	function openColorPicker() {
+		setColorPickerStates(true);
+	}
+
+	function closeColorPicker() {
+		setColorPickerStates(false);
+	}
 
 	const blockProps = useBlockProps({
 		className: "boat-config-edit-block",
@@ -84,7 +104,7 @@ export default function Edit(props) {
 		props.setAttributes({
 			questions: props.attributes.questions.concat([{
 				"text": "",
-				"options": [{ "text": "", "imgUrl": "" }]
+				"options": [{ "text": "", "imgUrl": "", "color": "" }]
 			}])
 		})
 	}
@@ -95,7 +115,7 @@ export default function Edit(props) {
 		const currentOptions = props.attributes.questions[questionIndex].options;
 
 		// Create a new array of options by concatenating a new empty option object
-		const newOptions = [...currentOptions, { "text": "", "imgUrl": "" }];
+		const newOptions = [...currentOptions, { "text": "", "imgUrl": "", "color": "" }];
 
 		// Update the questions attribute with the new options array
 		props.setAttributes({
@@ -108,16 +128,21 @@ export default function Edit(props) {
 		});
 	}
 
-	// function toggleAccordion(questionIndex) {
-	// 	const newQuestions = props.attributes.questions.map((question, index) => {
-	// 	  if (index === questionIndex) {
-	// 		return { ...question, isOpen: !question.isOpen };
-	// 	  }
-	// 	  return question;
-	// 	});
-	// 	props.setAttributes({ questions: newQuestions });
-	// }
-
+	function moveQuestion(questionIndex, moveUpBoolean) {
+		if (moveUpBoolean) {
+			if (questionIndex > 0) {
+				const newQuestions = [...props.attributes.questions];
+				[newQuestions[questionIndex], newQuestions[questionIndex - 1]] = [newQuestions[questionIndex - 1], newQuestions[questionIndex]];
+				props.setAttributes({ questions: newQuestions });
+			}
+		} else {
+			if (questionIndex < props.attributes.questions.length - 1) {
+				const newQuestions = [...props.attributes.questions];
+				[newQuestions[questionIndex], newQuestions[questionIndex + 1]] = [newQuestions[questionIndex + 1], newQuestions[questionIndex]];
+				props.setAttributes({ questions: newQuestions });
+			}
+		}
+	}
 
 	return (
 		<>
@@ -132,103 +157,166 @@ export default function Edit(props) {
 						</PanelRow>
 					</PanelBody>
 				</InspectorControls> */}
-				<TextControl label="Model:" value={props.attributes.model} onChange={updateModel} style={{ fontSize: "20px" }} />
-				<p style={{ fontSize: "13px", margin: "20px 0 8px 0" }}>Questions:</p>
+				<label class="input-bc-custom">
+					<input
+						class="input-bc-custom__field"
+						type="text" placeholder=" "
+						value={props.attributes.model}
+						onChange={(event) => updateModel(event.target.value)}
+						style={{ fontSize: "20px" }}
+					/>
+					<span class="input-bc-custom__label">Model:</span>
+				</label>
+				{/* <TextControl label="Model:" value={props.attributes.model} onChange={updateModel} style={{ fontSize: "20px" }} /> */}
+				<p style={{ fontSize: "13px", margin: "20px 0 8px 0", paddingLeft: "1.4em", color: "#b0afaf" }}>Questions:</p>
 
 				{props.attributes.questions.map(function (question, questionIndex) {
-					//const [isActive, setIsActive] = useState(false);
+
 					const isActive = accordionStates[questionIndex] || false;
 					return (
-						<div key={questionIndex} className="accordion">
-							<div className={`accordion-header ${!isActive ? 'closed' : ''}`} onClick={() => toggleAccordion(questionIndex)}>
-								<Flex>
-									<FlexItem>
-										{question.text}
-									</FlexItem>
-									<FlexItem>
-										{isActive ? <span class="dashicons dashicons-arrow-up-alt2"></span> : <span class="dashicons dashicons-arrow-down-alt2"></span>}
-									</FlexItem>
-								</Flex>
-							</div>
-							{isActive &&
-								<div className="accordion-content">
-									{/* <div className={`accordion-content ${props.attributes.questions[questionIndex].isOpen ? 'open' : ''}`}> */}
-									<Flex className="question-container">
+						<Flex>
+							<FlexItem style={{ flex: 20 }}>
+								<div key={questionIndex} class="accordion">
+									<div class={`accordion-header ${!isActive ? 'closed' : ''}`} >
+										<Flex>
+											<Flex className="question-header" >
+												<FlexBlock className="stacked">
+													<FlexItem className="question-arrows">
+														{questionIndex > 0 ? <span class="dashicons dashicons-arrow-up-alt2" onClick={() => moveQuestion(questionIndex, true)}></span> : <span class="dashicons dashicons-arrow-up-alt2" style={{ color: "#dfdfdf" }}></span>}
+													</FlexItem>
+													<FlexItem className="question-arrows">
+														{questionIndex < props.attributes.questions.length - 1 ? <span class="dashicons dashicons-arrow-down-alt2" onClick={() => moveQuestion(questionIndex)}></span> : <span class="dashicons dashicons-arrow-down-alt2" style={{ color: "#dfdfdf" }}></span>}
+													</FlexItem>
+												</FlexBlock>
+												<FlexItem className="question-header" onClick={() => toggleAccordion(questionIndex)}>
+													<FlexItem>
+														{questionIndex + 1}
+													</FlexItem>
+													<FlexItem>
+														{question.text}
+													</FlexItem>
+												</FlexItem>
+											</Flex>
+											<Flex className="question-expand">
+												<FlexItem>
+													<span class={`dashicons dashicons-${isActive ? 'minus' : 'plus'}`} onClick={() => toggleAccordion(questionIndex)}></span>
+												</FlexItem>
+											</Flex>
+										</Flex>
+									</div>
+									{isActive &&
+										<div className="accordion-content">
+											<Flex className="question-container">
 
-										<FlexBlock>
-											<TextControl value={question.text}
+												<FlexBlock>
+													{/* <TextControl value={question.text}
 												onChange={newValue => {
 													const newQuestions = [...props.attributes.questions]; // Create a copy of the questions array
 													newQuestions[questionIndex].text = newValue; // Update the text of the question at the specified index
 													props.setAttributes({ questions: newQuestions }); // Set the updated questions array in the attributes
 												}}
-											/>
+											/> */}
 
-											<div class="container">
-												{question.options.map((option, optionIndex) => (
-													<label>
+													<label class="input-bc-custom">
 														<input
-															type="radio"
-															name={option.optionText}
-															value={option.optionText}
-															id={optionIndex}
-														/>
-														<div class="card">
-															<span class="dashicons dashicons-no delete-option" onClick={() => deleteOption(questionIndex, optionIndex)}></span>
-
-															<div class="top-text">
-																<div class="option">
-																	<TextControl
-																		value={option.optionText}
-																		onChange={(newValue) => {
-																			const newQuestions = [...props.attributes.questions];
-																			newQuestions[questionIndex].options[optionIndex].optionText = newValue;
-																			props.setAttributes({ questions: newQuestions });
-																		}}
-																	/>
-																</div>
-															</div>
-
-															<div class="img">
-
-																<MediaUpload
-																	onSelect={(image) => {
-																		props.setAttributes({ imageURL: image.url });
-																	}}
-																	allowedTypes={['image']}
-																	value={props.attributes.imageURL}
-																	render={({ open }) => (
-																		<img
-																			src={props.attributes.imageURL || 'https://via.placeholder.com/100x100/e8e8e8/ffffff&text=add image'}
-																			alt="Option 2"
-																			style={{ cursor: 'pointer' }}
-																			onClick={open}
-																		/>
-																	)}
-																/>
-
-															</div>
-
-														</div>
+															class="input-bc-custom__field"
+															type="text"
+															placeholder=" "
+															value={question.text}
+															onChange={(event) => {
+																const newQuestions = [...props.attributes.questions]; // Create a copy of the questions array
+																newQuestions[questionIndex].text = event.target.value; // Update the text of the question at the specified index
+																props.setAttributes({ questions: newQuestions }); // Set the updated questions array in the attributes
+															}}
+															style={{ fontSize: "15px" }} />
+														<span class="input-bc-custom__label question">Question text:</span>
 													</label>
-												))}
-												<div class="card-plus">
-													<span class="dashicons dashicons-insert add-option" onClick={() => addNewOption(questionIndex)}></span>
-												</div>
-											</div>
 
-										</FlexBlock>
+													<div class="container">
 
-										<FlexItem className="delete-question">
-											<span class="dashicons dashicons-trash delete-btn" onClick={() => deleteQuestion(questionIndex)}></span>
-											{/* <Button isLink className="attention-delete" onClick={() => deleteQuestion(questionIndex)}>Delete</Button> */}
-										</FlexItem>
-									</Flex>
+														<div class="container">
+															{question.options.map((option, optionIndex) => {
+																const isColorPickerOpen = colorPickerStates || false;
+																return (
+																	<div class="card">
+																		<span class="dashicons dashicons-no delete-option" onClick={() => deleteOption(questionIndex, optionIndex)}></span>
+																		<div class="top-text">
+																			<div class="option">
+																				<label class="input-bc-custom">
+																					<input
+																						class="input-bc-custom__field"
+																						type="text"
+																						placeholder=" "
+																						value={option.optionText}
+																						onChange={(event) => {
+																							const newQuestions = [...props.attributes.questions];
+																							newQuestions[questionIndex].options[optionIndex].optionText = event.target.value;
+																							props.setAttributes({ questions: newQuestions });
+																						}}
+																						style={{ fontSize: "15px" }} />
+																					<span class="input-bc-custom__label">Option text:</span>
+																				</label>
+																			</div>
+																		</div>
+																		<div>
+																			<MediaUpload
+																				onSelect={(image) => {
+																					const newQuestions = [...props.attributes.questions];
+																					newQuestions[questionIndex].options[optionIndex].imgUrl = image.url;
+																					newQuestions[questionIndex].options[optionIndex].color = '';
+																					props.setAttributes({ questions: newQuestions });
+																				}}
+																				allowedTypes={['image']}
+																				render={({ open }) => (
+																					<span class="dashicons dashicons-format-image" onClick={open}></span>
+																				)}
+																			/>
+																			<span class="dashicons dashicons-color-picker" onClick={() => openColorPicker()}></span>
+																			{isColorPickerOpen && (
+																				<Modal title="Pick the color" onRequestClose={() => closeColorPicker()}>
+																					<ColorPicker
+																						color={option.color}
+																						onChange={(newColor) => {
+																							const newQuestions = [...props.attributes.questions];
+																							newQuestions[questionIndex].options[optionIndex].imgUrl = '';
+																							newQuestions[questionIndex].options[optionIndex].color = newColor;
+																							props.setAttributes({ questions: newQuestions });
+																						}}
+																					/>
+																				</Modal>
+																			)}
+																		</div>
+																		<div class="img">
+																			{option.imgUrl && <img src={option.imgUrl} alt={option.text} />}
+																			{option.color && <div style={{ background: option.color, height: '100%', width: '100%' }}></div>}
+																			{/* <ColorPicker
+																				onChange={(newColor) => {
+																					const newQuestions = [...props.attributes.questions];
+																					newQuestions[questionIndex].options[optionIndex].color = newColor;
+																					props.setAttributes({ questions: newQuestions });
+																				}}
+																			/> */}
+																			<div style={{ background: option.color, height: '50px' }}></div>
+																		</div>
+																	</div>
+																);
+															})}
+														</div>
 
-									Your collapsible text area content goes here.
+														<div class="card-plus">
+															<span class="dashicons dashicons-insert add-option" onClick={() => addNewOption(questionIndex)}></span>
+														</div>
+													</div>
+												</FlexBlock>
+											</Flex>
+										</div>
+									}
 								</div>
-							}
-						</div>
+							</FlexItem>
+							<FlexItem className="delete-question" style={{ flex: 1 }}>
+								<span class="dashicons dashicons-trash delete-btn" onClick={() => deleteQuestion(questionIndex)}></span>
+							</FlexItem>
+						</Flex>
 
 					)
 				})}

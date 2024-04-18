@@ -87,3 +87,15 @@ add_action('init', 'cpt_register_post_type');
 //     return $template;
 // }
 
+// add_filter( 'single_template', 'boat_config_template' );
+// function boat_config_template($single_template) {
+//      global $post;
+
+//      if ($post->post_type == 'boat_config' ) {
+//           $single_template = dirname( __FILE__ ) . '/templates/single-boat-config.html';
+//      }
+//      return $single_template;
+  
+// }
+
+
