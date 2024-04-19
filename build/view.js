@@ -30,6 +30,7 @@ console.log('Hello World! (from create-block-boat-configurator block)');
 /* eslint-enable no-console */
 
 document.addEventListener('DOMContentLoaded', function () {
+  let questionIndex = 0;
   const validateEmail = email => {
     // Test for the minimum length the email can be
     if (email.trim().length < 6) {

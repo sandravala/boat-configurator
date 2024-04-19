@@ -131,6 +131,8 @@ function enqueue_custom_script() {
     $screen = get_current_screen();
     if ( $screen && 'boat_config' === $screen->post_type ) {
     wp_enqueue_script( 'custom-script', plugin_dir_url( __FILE__ ) . 'src/admin/custom-bc-admin-script.js', array(), '1.0', true );
+    // wp_enqueue_script( 'boat-config-view-form-script', lugin_dir_url( __FILE__ ) . '/src/front-end/multistep-form.js', array(), '1.0', true, array('strategy'  => 'defer', ) );
+    //wp_enqueue_script( 'boat-config-view-form-script', plugin_dir_url( __FILE__ ) . '/front-end/multistep-form.js', array(), '1.0', true, array('strategy'  => 'defer', )  );
     }
 }
 add_action( 'admin_enqueue_scripts', 'enqueue_custom_script' );

@@ -333,11 +333,6 @@ function Edit(props) {
           height: '100%',
           width: '100%'
         }
-      }), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-        style: {
-          background: option.color,
-          height: '50px'
-        }
       })));
     })), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
       class: "card-plus"
@@ -541,7 +536,7 @@ module.exports = window["wp"]["i18n"];
   \************************/
 /***/ ((module) => {
 
-module.exports = /*#__PURE__*/JSON.parse('{"$schema":"https://schemas.wp.org/trunk/block.json","apiVersion":3,"name":"create-block/boat-configurator","version":"0.1.0","title":"Boat Configurator","category":"text","icon":"admin-generic","description":"Example block scaffolded with Create Block tool.","example":{},"supports":{"html":false},"textdomain":"boat-configurator","editorScript":"file:./index.js","editorStyle":"file:./index.css","style":"file:./style-index.css","viewScript":"file:./view.js","attributes":{"model":{"type":"string"},"questions":{"type":"array","default":[{"text":"","options":[{"text":"","imgUrl":"","color":""}]}],"items":{"type":"object","properties":{"text":{"type":"string"},"options":{"type":"array","items":{"type":"object","properties":{"text":{"type":"string"},"imgUrl":{"type":"string"},"color":{"type":"string"}}}}}}}},"render":"file:./render.php"}');
+module.exports = /*#__PURE__*/JSON.parse('{"$schema":"https://schemas.wp.org/trunk/block.json","apiVersion":3,"name":"create-block/boat-configurator","version":"0.1.0","title":"Boat Configurator","category":"text","icon":"admin-generic","description":"Example block scaffolded with Create Block tool.","example":{},"supports":{"html":false},"textdomain":"boat-configurator","editorScript":"file:./index.js","editorStyle":"file:./index.css","style":"file:./style-index.css","viewScript":"file:./view.js","script":["file:./front-end/multistep-form.js","boat-config-view-form-script"],"attributes":{"model":{"type":"string"},"questions":{"type":"array","default":[{"text":"","options":[{"text":"","imgUrl":"","color":""}]}],"items":{"type":"object","properties":{"text":{"type":"string"},"options":{"type":"array","items":{"type":"object","properties":{"text":{"type":"string"},"imgUrl":{"type":"string"},"color":{"type":"string"}}}}}}}},"render":"file:./render.php"}');
 
 /***/ })
 

@@ -15,10 +15,13 @@
 	"editorScript": "file:./index.js",
 	"editorStyle": "file:./index.css",
 	"style": "file:./style-index.css",
-	"viewScript": "file:./view.js",
+	"viewScript": "file:./view.js", 
+	"script": ["file:./front-end/multistep-form.js", "boat-config-view-form-script" ],
 	"attributes": {
-		"model": { "type": "string" },
-		  "questions": {
+		"model": {
+			"type": "string"
+		},
+		"questions": {
 			"type": "array",
 			"default": [
 				{
@@ -35,21 +38,29 @@
 			"items": {
 				"type": "object",
 				"properties": {
-					"text": { "type": "string" },
+					"text": {
+						"type": "string"
+					},
 					"options": {
 						"type": "array",
 						"items": {
 							"type": "object",
 							"properties": {
-								"text": { "type": "string" },
-								"imgUrl": { "type": "string" },
-								"color": { "type": "string" }
+								"text": {
+									"type": "string"
+								},
+								"imgUrl": {
+									"type": "string"
+								},
+								"color": {
+									"type": "string"
+								}
 							}
 						}
 					}
 				}
 			}
 		}
-	  },
+	},
 	"render": "file:./render.php"
 }

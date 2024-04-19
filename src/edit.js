@@ -284,14 +284,7 @@ export default function Edit(props) {
 																		<div class="img">
 																			{option.imgUrl && <img src={option.imgUrl} alt={option.text} />}
 																			{option.color && <div style={{ background: option.color, height: '100%', width: '100%' }}></div>}
-																			{/* <ColorPicker
-																				onChange={(newColor) => {
-																					const newQuestions = [...props.attributes.questions];
-																					newQuestions[questionIndex].options[optionIndex].color = newColor;
-																					props.setAttributes({ questions: newQuestions });
-																				}}
-																			/> */}
-																			<div style={{ background: option.color, height: '50px' }}></div>
+
 																		</div>
 																	</div>
 																);
