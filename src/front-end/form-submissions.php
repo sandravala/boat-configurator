@@ -17,11 +17,9 @@ function handle_form_submission()
     if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
         error_log('Invalid request method');
         wp_send_json_error('Invalid request method');
-        return;
+        wp_die();
     }
 
-    // error_log('before parse_str');
-    // parse_str($_POST['form_data'], $form_data);
 
     $form_data = $_POST['form_data'];
 
@@ -42,7 +40,7 @@ function handle_form_submission()
             // Add the sanitized answer to the sanitized array
             $sanitizedQuestionAnswers[$questionText] = $sanitizedAnswer;
         }
-        error_log(print_r($sanitizedQuestionAnswers, true));
+        // error_log(print_r($sanitizedQuestionAnswers, true));
     }
 
     if (isset($form_data['contactInfo'])) {
@@ -79,7 +77,7 @@ function handle_form_submission()
             $sanitizedContactInfo[$fieldId] = $sanitizedValue;
         }
 
-        error_log(print_r($sanitizedContactInfo, true));
+        // error_log(print_r($sanitizedContactInfo, true));
     }
 
     // Extract email and other fields

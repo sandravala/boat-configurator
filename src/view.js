@@ -438,7 +438,7 @@ function BoatConfig(questionsData) {
                                                                 style={{ fontSize: "20px" }}
                                                                 id={field.id}
                                                                 name={field.id}
-                                                                value={answers[field.id] ? answers[field.id][0] : ''}
+                                                                value={answers[field.id]  ? answers[field.id][0] : ''}
                                                                 onChange={(e) => updateAnswers(field.id, [e.target.value, field.type])}
                                                                 {...field.required}
                                                             />
