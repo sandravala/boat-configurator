@@ -87,16 +87,6 @@ function boat_configurator_add_admin_menu() {
         'edit.php?post_type=boat_config'
     );
 
-    // Add submenu for Blocks Used
-    // add_submenu_page(
-    //     'boat-configurator',           // Parent menu slug
-    //     'Blocks Used',                 // Page title
-    //     'Blocks Used',                 // Menu title
-    //     'manage_options',              // Capability required to access the menu
-    //     'boat-configurator-blocks',    // Menu slug
-    //     'boat_configurator_blocks_list_page' // Function to render the page content
-    // );
-
     // Add submenu for Form Entries
     add_submenu_page(
         'boat-configurator',           // Parent menu slug
@@ -137,6 +127,69 @@ function enqueue_custom_script() {
 }
 add_action( 'admin_enqueue_scripts', 'enqueue_custom_script' );
 
+add_action('wp_ajax_fetch_bc_questions', 'fetch_bc_question_data');
+add_action('wp_ajax_nopriv_fetch_bc_questions', 'fetch_bc_question_data');
+
+function fetch_bc_question_data() {
+
+    if(!check_ajax_referer( 'bc_frontend_view_nonce', 'security' )) {
+        wp_send_json_error(array('message' => 'Security check failed'));
+        return;
+    }
+
+    // Ensure the post ID is present
+    $post_id = isset($_GET['post_id']) ? intval($_GET['post_id']) : 0;
+    if (!$post_id) {
+        wp_send_json_error(array('message' => 'Invalid post ID'));
+        return;
+    }
+
+    // Retrieve the post and parse its content
+    $post = get_post($post_id);
+    if (!$post) {
+        wp_send_json_error(array('message' => 'Post not found'));
+        return;
+    }
+
+    $blocks = parse_blocks($post->post_content);
+    $boat_configurator_block = null;
+
+
+    $boat_configurator_block = find_nested_block($blocks, 'create-block/boat-configurator');
+
+    if ($boat_configurator_block) {
+        $model = $boat_configurator_block['attrs']['model'] ?? 'No model provided';
+        $questions = $boat_configurator_block['attrs']['questions'] ?? [];
+        $response_data = [
+            'model' => $model,
+            'questions' => $questions
+        ];
+        wp_send_json_success($response_data);
+    } else {
+        wp_send_json_error(['message' => 'No configurator block found']);
+    }
+
+}
+
+
+function find_nested_block(array $blocks, $target_block_name) {
+    foreach ($blocks as $block) {
+        // Check if the current block is the one we're looking for
+        if ($block['blockName'] === $target_block_name) {
+            return $block; // Return the block if it matches the target
+        }
+
+        // If the block has inner blocks, recursively search through them
+        if (isset($block['innerBlocks']) && !empty($block['innerBlocks'])) {
+            $found_block = find_nested_block($block['innerBlocks'], $target_block_name);
+            if ($found_block) {
+                return $found_block; // Return the block if found in inner blocks
+            }
+        }
+    }
+
+    return null; // Return null if no matching block is found
+}
 
 // Include the file with the form submission handling function
 require_once plugin_dir_path( __FILE__ ) . 'src/front-end/form-submissions.php';

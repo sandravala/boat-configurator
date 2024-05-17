@@ -204,14 +204,6 @@ export default function Edit(props) {
 											<Flex className="question-container">
 
 												<FlexBlock>
-													{/* <TextControl value={question.text}
-												onChange={newValue => {
-													const newQuestions = [...props.attributes.questions]; // Create a copy of the questions array
-													newQuestions[questionIndex].text = newValue; // Update the text of the question at the specified index
-													props.setAttributes({ questions: newQuestions }); // Set the updated questions array in the attributes
-												}}
-											/> */}
-
 													<label class="input-bc-custom">
 														<input
 															class="input-bc-custom__field"

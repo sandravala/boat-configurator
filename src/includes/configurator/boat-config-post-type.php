@@ -44,14 +44,20 @@ function cpt_register_post_type()
         'show_in_rest'          => true,
 		//'hierarchical'       => false,
 		//'menu_position'      => null,
-		'supports'           => array( ),
+		'taxonomies'          => array( 'category' ),
+		'supports'           => array( 'thumbnail', 'editor' ),
         'template'              => array(
             array(
-                'core/pattern',
-                array(
-                    'slug' => 'boat-configurator/boat-config-pattern',
-                ),
-            ),
+				array( 'core/image', array(
+					'align' => 'left',
+				) ),
+				array( 'core/heading', array(
+					'placeholder' => 'Add Author...',
+				) ),
+				array( 'core/paragraph', array(
+					'placeholder' => 'Add Description...',
+				) ),
+			),
         ),
 	);
 

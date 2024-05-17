@@ -4,19 +4,21 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit8cdafbcb8cc753413fa704d667bcbd0b
+class ComposerStaticInit584e7df6b7eaffaa3c57548286cf1911
 {
     public static $files = array (
         '6e3fae29631ef280660b3cdad06f25a8' => __DIR__ . '/..' . '/symfony/deprecation-contracts/function.php',
         '9c67151ae59aff4788964ce8eb2a0f43' => __DIR__ . '/..' . '/clue/stream-filter/src/functions_include.php',
-        '8cff32064859f4559445b89279f3199c' => __DIR__ . '/..' . '/php-http/message/src/filters.php',
         'a4a119a56e50fbb293281d9a48007e0e' => __DIR__ . '/..' . '/symfony/polyfill-php80/bootstrap.php',
+        '8cff32064859f4559445b89279f3199c' => __DIR__ . '/..' . '/php-http/message/src/filters.php',
+        '0d59ee240a4cd96ddbb4ff164fccea4d' => __DIR__ . '/..' . '/symfony/polyfill-php73/bootstrap.php',
     );
 
     public static $prefixLengthsPsr4 = array (
         'S' => 
         array (
             'Symfony\\Polyfill\\Php80\\' => 23,
+            'Symfony\\Polyfill\\Php73\\' => 23,
             'Symfony\\Contracts\\Service\\' => 26,
             'Symfony\\Contracts\\HttpClient\\' => 29,
             'Symfony\\Component\\OptionsResolver\\' => 34,
@@ -56,6 +58,10 @@ class ComposerStaticInit8cdafbcb8cc753413fa704d667bcbd0b
         array (
             0 => __DIR__ . '/..' . '/symfony/polyfill-php80',
         ),
+        'Symfony\\Polyfill\\Php73\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/symfony/polyfill-php73',
+        ),
         'Symfony\\Contracts\\Service\\' => 
         array (
             0 => __DIR__ . '/..' . '/symfony/service-contracts',
@@ -78,8 +84,8 @@ class ComposerStaticInit8cdafbcb8cc753413fa704d667bcbd0b
         ),
         'Psr\\Http\\Message\\' => 
         array (
-            0 => __DIR__ . '/..' . '/psr/http-factory/src',
-            1 => __DIR__ . '/..' . '/psr/http-message/src',
+            0 => __DIR__ . '/..' . '/psr/http-message/src',
+            1 => __DIR__ . '/..' . '/psr/http-factory/src',
         ),
         'Psr\\Http\\Client\\' => 
         array (
@@ -126,6 +132,7 @@ class ComposerStaticInit8cdafbcb8cc753413fa704d667bcbd0b
     public static $classMap = array (
         'Attribute' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/Attribute.php',
         'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
+        'JsonException' => __DIR__ . '/..' . '/symfony/polyfill-php73/Resources/stubs/JsonException.php',
         'PhpToken' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/PhpToken.php',
         'Stringable' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/Stringable.php',
         'UnhandledMatchError' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/UnhandledMatchError.php',
@@ -135,9 +142,9 @@ class ComposerStaticInit8cdafbcb8cc753413fa704d667bcbd0b
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit8cdafbcb8cc753413fa704d667bcbd0b::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit8cdafbcb8cc753413fa704d667bcbd0b::$prefixDirsPsr4;
-            $loader->classMap = ComposerStaticInit8cdafbcb8cc753413fa704d667bcbd0b::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit584e7df6b7eaffaa3c57548286cf1911::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit584e7df6b7eaffaa3c57548286cf1911::$prefixDirsPsr4;
+            $loader->classMap = ComposerStaticInit584e7df6b7eaffaa3c57548286cf1911::$classMap;
 
         }, null, ClassLoader::class);
     }
