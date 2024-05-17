@@ -177,15 +177,39 @@ function BoatConfig(questionsData) {
     }
   };
   const updateAnswers = (questionIdentifier, value) => {
+    let answer = value.length ? {
+      ...value
+    } : value;
     setAnswers(prev => ({
       ...prev,
-      [questionIdentifier]: value
+      [questionIdentifier]: answer
     }));
     console.log(answers);
   };
   const handleSubmit = e => {
     e.preventDefault();
-    var formData = jQuery('#bc-form').serialize();
+
+    // Extract contact information dynamically
+    const contactInfo = {};
+    contactFormFields.forEach(field => {
+      contactInfo[field.id] = answers[field.id];
+    });
+
+    // Extract answers to questions
+    const questionAnswers = {};
+    questionsData.questions.forEach((question, index) => {
+      const questionText = question.text;
+      const selectedOption = answers[questionText];
+      questionAnswers[questionText] = selectedOption;
+    });
+
+    // Prepare data to be sent to the backend
+    const formData = {
+      contactInfo: contactInfo,
+      questionAnswers: questionAnswers
+    };
+    console.log(formData);
+    // var formData = jQuery('#bc-form').serialize();
     setFormSubitting(true);
     jQuery.ajax({
       url: questionsData.ajaxUrl,
@@ -892,7 +916,7 @@ function BoatConfig(questionsData) {
     name: question.text,
     value: option.optionText,
     id: `${currentIndex}_${optionIndex}`,
-    onChange: () => updateAnswers(question.text, option.optionText)
+    onChange: () => updateAnswers(question.text, option)
   }), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "card"
   }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
@@ -921,8 +945,8 @@ function BoatConfig(questionsData) {
     },
     id: field.id,
     name: field.id,
-    value: answers[field.id],
-    onChange: e => updateAnswers(field.id, e.target.value),
+    value: answers[field.id] ? answers[field.id][0] : '',
+    onChange: e => updateAnswers(field.id, [e.target.value, field.type]),
     ...field.required
   }) : (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("select", {
     class: "input-bc-custom__field",
@@ -933,8 +957,8 @@ function BoatConfig(questionsData) {
     },
     id: field.id,
     name: field.id,
-    value: answers[field.id],
-    onChange: e => updateAnswers(field.id, e.target.value),
+    value: answers[field.id] ? answers[field.id][0] : '',
+    onChange: e => updateAnswers(field.id, [e.target.value, field.type]),
     ...field.required
   }, field.options.map((option, optionIndex) => (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("option", {
     value: option.value

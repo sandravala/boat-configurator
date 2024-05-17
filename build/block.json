@@ -31,7 +31,7 @@
           "text": "",
           "options": [
             {
-              "text": "",
+              "optionText": "",
               "imgUrl": "",
               "color": ""
             }
@@ -49,7 +49,7 @@
             "items": {
               "type": "object",
               "properties": {
-                "text": {
+                "optionText": {
                   "type": "string"
                 },
                 "imgUrl": {

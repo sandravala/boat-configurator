@@ -4,24 +4,15 @@ use MailerLite\Mailerlite;
 add_action('wp_ajax_nopriv_handle_form_submission', 'handle_form_submission');
 add_action('wp_ajax_handle_form_submission', 'handle_form_submission');
 
-// Function to handle form submissions
-function handle_form_submission() {
-    // Check if the form has been submitted
+function handle_form_submission()
+{
 
-    // && isset($_POST['submit_form'])
-
-    // && wp_verify_nonce( 'boat_configurator_nonce_' . $_POST['form_id'], 'boat_configurator_form_submit_action' )
-
-    // $nonce_verified = wp_verify_nonce('boat_configurator_nonce_' . $_POST['form_id'], 'boat_configurator_form_submit_action');
-    // error_log('Nonce verification result: ' . ($nonce_verified ? 'true' : 'false'));
-   
     error_log('entered handle_form_submission');
-    if( !check_ajax_referer( 'bc_frontend_view_nonce', 'security' )) {
+    if (!check_ajax_referer('bc_frontend_view_nonce', 'security')) {
         error_log('Nonce verification failed');
         wp_send_json_error(array('message' => 'Invalid nonce'));
         wp_die();
     }
-
 
     if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
         error_log('Invalid request method');
@@ -29,39 +20,95 @@ function handle_form_submission() {
         return;
     }
 
-    error_log('before parse_str');
-    parse_str($_POST['form_data'], $form_data);
-    error_log($form_data);
+    // error_log('before parse_str');
+    // parse_str($_POST['form_data'], $form_data);
 
-        // Extract email and other fields
-        $email = isset($form_data['email']) ? sanitize_email($form_data['email']) : '';
-    
-        if (empty($email)) {
-            error_log('Email is empty');
-            wp_send_json_error('Email is required');
-            return;
+    $form_data = $_POST['form_data'];
+
+    error_log(print_r($form_data, true));
+
+    if (isset($form_data['questionAnswers'])) {
+        $sanitizedQuestionAnswers = array();
+
+        // Loop through each question answer
+        foreach ($form_data['questionAnswers'] as $questionText => $answer) {
+            // Sanitize the text, imgUrl, and color values if they exist
+            $sanitizedAnswer = array(
+                'text' => isset($answer['text']) ? sanitize_text_field($answer['text']) : '',
+                'imgUrl' => isset($answer['imgUrl']) ? esc_url_raw($answer['imgUrl']) : '',
+                'color' => isset($answer['color']) ? sanitize_hex_color($answer['color']) : '',
+            );
+
+            // Add the sanitized answer to the sanitized array
+            $sanitizedQuestionAnswers[$questionText] = $sanitizedAnswer;
         }
+        error_log(print_r($sanitizedQuestionAnswers, true));
+    }
+
+    if (isset($form_data['contactInfo'])) {
+        $contactFormFields = $form_data['contactInfo'];
     
-        // // Save to database
-        // saveBoatConfigToDB();
+        // Initialize an empty array for sanitized data
+        $sanitizedContactInfo = array();
     
-        // Send email to admin
-        $admin_email = get_option('admin_email');
-        $subject = 'New form submission';
-        $message = 'A new form submission has been received.';
+        // Loop through each field in the received data
+        foreach ($contactFormFields as $fieldId => $fieldData) {
+            $fieldValue = $fieldData[0];
+            $fieldType = $fieldData[1];
+            $sanitizedValue = '';
     
-        if (!wp_mail($admin_email, $subject, $message)) {
-            error_log('Failed to send email');
-            wp_send_json_error('Failed to send email');
-            return;
+            // Sanitize based on field type
+            switch ($fieldType) {
+                case 'text':
+                case 'select': // Assuming 'select' values are strings and should be sanitized as text
+                    $sanitizedValue = sanitize_text_field($fieldValue);
+                    break;
+                case 'email':
+                    $sanitizedValue = sanitize_email($fieldValue);
+                    break;
+                case 'number':
+                    $sanitizedValue = intval($fieldValue); // Sanitize as integer
+                    break;
+                // Add more cases if there are other types
+                default:
+                    $sanitizedValue = sanitize_text_field($fieldValue); // Default sanitization
+                    break;
+            }
+    
+            // Add the sanitized value to the sanitized contact info array
+            $sanitizedContactInfo[$fieldId] = $sanitizedValue;
         }
 
-        error_log('before wp_send_json_success');
-        wp_send_json_success( array( 
-            'text' => 'all great', 
-        ), 200 );
+        error_log(print_r($sanitizedContactInfo, true));
+    }
 
+    // Extract email and other fields
+    $email = isset($sanitizedContactInfo['email']) ? sanitize_email($sanitizedContactInfo['email']) : '';
 
+    if (empty($email)) {
+        error_log('Email is empty');
+        wp_send_json_error('Email is required');
+        return;
+    }
+
+    // // Save to database
+    // saveBoatConfigToDB();
+
+    // Send email to admin
+    $admin_email = get_option('admin_email');
+    $subject = 'New form submission';
+    $message = 'A new form submission has been received.';
+
+    if (!wp_mail($admin_email, $subject, $message)) {
+        error_log('Failed to send email');
+        wp_send_json_error('Failed to send email');
+        return;
+    }
+
+    error_log('before wp_send_json_success');
+    wp_send_json_success(array(
+        'text' => 'all great',
+    ), 200);
 
     // if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
@@ -75,7 +122,7 @@ function handle_form_submission() {
     //     $message = 'A new form submission has been received.';
 
     //     wp_mail($admin_email, $subject, $message);
-        
+
     //     $apiKey = MAILERLITE_KEY;
 
     //     error_log($apiKey);
@@ -99,11 +146,10 @@ function handle_form_submission() {
 
     // Check if the form has been submitted
 
-       
-
 }
 
-function saveBoatConfigToDB() {
+function saveBoatConfigToDB()
+{
     // Retrieve form data from POST variables
     $answers = isset($_POST['input_0']) ? $_POST['input_0'] : '';
     $email = isset($_POST['email_input']) ? $_POST['email_input'] : 'no email';
@@ -111,7 +157,7 @@ function saveBoatConfigToDB() {
 
     // Sanitize and validate form data (you should implement your own sanitization/validation logic here)
     global $wpdb;
-        // Insert form data into the database table
+    // Insert form data into the database table
     $table_name = $wpdb->prefix . DB_TABLE; // Replace 'your_table_name' with your actual table name
     $wpdb->insert(
         $table_name,

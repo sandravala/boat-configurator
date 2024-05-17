@@ -86,9 +86,11 @@ function BoatConfig(questionsData) {
     };
 
     const updateAnswers = (questionIdentifier, value) => {
+        let answer = value.length ? { ...value } : value;
+
         setAnswers(prev => ({
             ...prev,
-            [questionIdentifier]: value
+            [questionIdentifier]: answer
         }));
         console.log(answers);
     };
@@ -96,7 +98,27 @@ function BoatConfig(questionsData) {
     const handleSubmit = (e) => {
         e.preventDefault();
 
-        var formData = jQuery('#bc-form').serialize();
+        // Extract contact information dynamically
+        const contactInfo = {};
+        contactFormFields.forEach((field) => {
+            contactInfo[field.id] = answers[field.id];
+        });
+
+        // Extract answers to questions
+        const questionAnswers = {};
+        questionsData.questions.forEach((question, index) => {
+            const questionText = question.text;
+            const selectedOption = answers[questionText];
+            questionAnswers[questionText] = selectedOption;
+        });
+
+        // Prepare data to be sent to the backend
+        const formData = {
+            contactInfo: contactInfo,
+            questionAnswers: questionAnswers
+        };
+        console.log(formData);
+        // var formData = jQuery('#bc-form').serialize();
         setFormSubitting(true);
 
         jQuery.ajax({
@@ -388,7 +410,7 @@ function BoatConfig(questionsData) {
                                                 name={question.text}
                                                 value={option.optionText}
                                                 id={`${currentIndex}_${optionIndex}`}
-                                                onChange={() => updateAnswers(question.text, option.optionText)}
+                                                onChange={() => updateAnswers(question.text, option)}
                                             />
                                             <div className="card">
                                                 <div className="top-text">
@@ -416,8 +438,8 @@ function BoatConfig(questionsData) {
                                                                 style={{ fontSize: "20px" }}
                                                                 id={field.id}
                                                                 name={field.id}
-                                                                value={answers[field.id]}
-                                                                onChange={(e) => updateAnswers(field.id, e.target.value)}
+                                                                value={answers[field.id] ? answers[field.id][0] : ''}
+                                                                onChange={(e) => updateAnswers(field.id, [e.target.value, field.type])}
                                                                 {...field.required}
                                                             />
                                                             :
@@ -428,8 +450,8 @@ function BoatConfig(questionsData) {
                                                                 style={{ fontSize: "20px" }}
                                                                 id={field.id}
                                                                 name={field.id}
-                                                                value={answers[field.id]}
-                                                                onChange={(e) => updateAnswers(field.id, e.target.value)}
+                                                                value={answers[field.id] ? answers[field.id][0] : ''}
+                                                                onChange={(e) => updateAnswers(field.id, [e.target.value, field.type])}
                                                                 {...field.required}
                                                             >
                                                                 {field.options.map((option, optionIndex) => (
@@ -495,28 +517,28 @@ function BoatConfig(questionsData) {
                 formSubmitting &&
                 <div class="form-submit-message">
 
-                {formSubmitMessage === '' &&
-                    <>
-                        <div class="loader"></div>
-                        <div><p>Form is submitting...</p></div>
-                    </>
-                }
-                {formSubmitMessage !== '' &&
-                    <>
-                        <p>{formSubmitMessage}</p>
-                        {formSubmitSuccess && 
-                        <div>
-                        <button type="button" class="previous" onClick={() => location.href = questionsData.homePage} >Go to Main page</button>
-                        <button type="button" class="next" onClick={() => location.href = questionsData.boatConfigArchive} >Configure More Boats</button>
-                        </div>
-}
-{!formSubmitSuccess && 
-                        <div>
-                        <button type="button" class="previous" onClick={() => location.reload()} >Try Again</button>
-                        </div>
-}
-                    </>
-                }
+                    {formSubmitMessage === '' &&
+                        <>
+                            <div class="loader"></div>
+                            <div><p>Form is submitting...</p></div>
+                        </>
+                    }
+                    {formSubmitMessage !== '' &&
+                        <>
+                            <p>{formSubmitMessage}</p>
+                            {formSubmitSuccess &&
+                                <div>
+                                    <button type="button" class="previous" onClick={() => location.href = questionsData.homePage} >Go to Main page</button>
+                                    <button type="button" class="next" onClick={() => location.href = questionsData.boatConfigArchive} >Configure More Boats</button>
+                                </div>
+                            }
+                            {!formSubmitSuccess &&
+                                <div>
+                                    <button type="button" class="previous" onClick={() => location.reload()} >Try Again</button>
+                                </div>
+                            }
+                        </>
+                    }
 
                 </div>
             }
