@@ -161,6 +161,7 @@ function BoatConfig(questionsData) {
   });
   const [formSubmitting, setFormSubitting] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false);
   const [formSubmitMessage, setFormSubmitMessage] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)('');
+  const [formSubmitSuccess, setFormSubmitSuccess] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false);
   (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
     setQuestion(questionsData.questions[currentIndex]);
     setProgress(currentIndex / (questionsData.questions.length - 1) * 100);
@@ -199,6 +200,7 @@ function BoatConfig(questionsData) {
         if (response.success) {
           console.log('success: ', response.data.text);
           setFormSubmitMessage('Data submitted successfully!');
+          setFormSubmitSuccess(true);
         } else {
           console.log('Error:', response);
           setFormSubmitMessage('Ooops! Something went wrong... please try again!');
@@ -995,9 +997,23 @@ function BoatConfig(questionsData) {
     class: "next",
     onClick: handleSubmit,
     disabled: false
-  }, "Submit")))), formSubmitting && (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, formSubmitMessage === '' && (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+  }, "Submit")))), formSubmitting && (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    class: "form-submit-message"
+  }, formSubmitMessage === '' && (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     class: "loader"
-  }), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", null, "Form is submitting...")), formSubmitMessage !== '' && (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", null, formSubmitMessage))));
+  }), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", null, "Form is submitting..."))), formSubmitMessage !== '' && (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", null, formSubmitMessage), formSubmitSuccess && (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
+    type: "button",
+    class: "previous",
+    onClick: () => location.href = questionsData.homePage
+  }, "Go to Main page"), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
+    type: "button",
+    class: "next",
+    onClick: () => location.href = questionsData.boatConfigArchive
+  }, "Configure More Boats")), !formSubmitSuccess && (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
+    type: "button",
+    class: "previous",
+    onClick: () => location.reload()
+  }, "Try Again")))));
 }
 function validateEmail(email) {
   // Test for the minimum length the email can be

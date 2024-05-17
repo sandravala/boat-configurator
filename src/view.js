@@ -43,7 +43,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     document.getElementById('create-block-boat-configurator-script-js-before').remove();
 
-    
+
 });
 
 
@@ -64,7 +64,9 @@ function BoatConfig(questionsData) {
     });
     const [formSubmitting, setFormSubitting] = useState(false);
     const [formSubmitMessage, setFormSubmitMessage] = useState('');
-    
+    const [formSubmitSuccess, setFormSubmitSuccess] = useState(false);
+
+
 
     useEffect(() => {
         setQuestion(questionsData.questions[currentIndex]);
@@ -97,30 +99,31 @@ function BoatConfig(questionsData) {
         var formData = jQuery('#bc-form').serialize();
         setFormSubitting(true);
 
-                    jQuery.ajax({
-                        url: questionsData.ajaxUrl,
-                        type: 'POST',
-                        data: {
-                            action: 'handle_form_submission',
-                            security: questionsData.feNonce, // Include nonce in the data payload
-                            form_data: formData,
-                        }, 
-                        success: function(response) {
-                            if(response.success) {
-                                console.log('success: ', response.data.text);
-                                setFormSubmitMessage('Data submitted successfully!');
-                            } else {
-                                console.log('Error:', response);
-                                setFormSubmitMessage('Ooops! Something went wrong... please try again!');
-                            }
-                        },
-                        error: function(xhr, status, error) {
-                            console.log('AJAX error:', xhr.responseText);
-                            setFormSubmitMessage('Ooops! Something went wrong... please try again!');
-                        }
-                    });
+        jQuery.ajax({
+            url: questionsData.ajaxUrl,
+            type: 'POST',
+            data: {
+                action: 'handle_form_submission',
+                security: questionsData.feNonce, // Include nonce in the data payload
+                form_data: formData,
+            },
+            success: function (response) {
+                if (response.success) {
+                    console.log('success: ', response.data.text);
+                    setFormSubmitMessage('Data submitted successfully!');
+                    setFormSubmitSuccess(true);
+                } else {
+                    console.log('Error:', response);
+                    setFormSubmitMessage('Ooops! Something went wrong... please try again!');
+                }
+            },
+            error: function (xhr, status, error) {
+                console.log('AJAX error:', xhr.responseText);
+                setFormSubmitMessage('Ooops! Something went wrong... please try again!');
+            }
+        });
 
-  
+
 
         // const emailInput = document.getElementById('email').value;
         // const errorMessage = document.getElementById('email-error');
@@ -354,8 +357,8 @@ function BoatConfig(questionsData) {
 
     return (
         <>
-        {   
-            !formSubmitting && 
+            {
+                !formSubmitting &&
                 <form id='bc-form'>
                     <div className='bc-frontend'>
                         <div className='pagination-progress'>
@@ -487,28 +490,40 @@ function BoatConfig(questionsData) {
                         </div>
                     </div>
                 </form>
-        } 
-        {
-            formSubmitting &&
-                    <div>
-                        {formSubmitMessage === '' && 
-                        <>
-                        <div class="loader"></div>
-                        <p>Form is submitting...</p>
-                        </>
-                        }
-                        {formSubmitMessage !== '' && 
-                        <>
-                        <p>{formSubmitMessage}</p>
-                        </>
-                        }
-                        
-                    </div>
-        }
+            }
+            {
+                formSubmitting &&
+                <div class="form-submit-message">
 
-        
+                {formSubmitMessage === '' &&
+                    <>
+                        <div class="loader"></div>
+                        <div><p>Form is submitting...</p></div>
+                    </>
+                }
+                {formSubmitMessage !== '' &&
+                    <>
+                        <p>{formSubmitMessage}</p>
+                        {formSubmitSuccess && 
+                        <div>
+                        <button type="button" class="previous" onClick={() => location.href = questionsData.homePage} >Go to Main page</button>
+                        <button type="button" class="next" onClick={() => location.href = questionsData.boatConfigArchive} >Configure More Boats</button>
+                        </div>
+}
+{!formSubmitSuccess && 
+                        <div>
+                        <button type="button" class="previous" onClick={() => location.reload()} >Try Again</button>
+                        </div>
+}
+                    </>
+                }
+
+                </div>
+            }
+
+
         </>
-        
+
     );
 }
 
@@ -519,7 +534,7 @@ function BoatConfig(questionsData) {
 
 function validateEmail(email) {
 
-    
+
     // Test for the minimum length the email can be
     if (email.trim().length < 6) {
         console.log('tuscias emailas');

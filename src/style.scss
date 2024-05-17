@@ -298,7 +298,7 @@ button {
 .loader {
     height: 30px;
     aspect-ratio: 6;
-    --c: #0000 64%,#000 66% 98%,#0000 101%;
+    --c: #0000 64%,#05b3bc 66% 98%,#0000 101%;
     background:
       radial-gradient(35% 146% at 50% 159%,var(--c)) 0 0,
       radial-gradient(35% 146% at 50% -59%,var(--c)) 25% 100%;
@@ -306,13 +306,19 @@ button {
     background-repeat: repeat-x;
     clip-path: inset(0 100% 0 0);
     animation: 
-      l4-0 1s infinite linear,
+      l4-0 2s infinite linear,
       l4-1 2s infinite steps(1);
   }
   @keyframes l4-0{
     to {clip-path: inset(0)}
   }
-  @keyframes l4-1{
-    50% {scale: -1 1}
-  }
+
+ .form-submit-message {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-flow: column;
+    padding-top: 4em;
+    border-top: 1px solid #c3c4c7;
+ }
 
