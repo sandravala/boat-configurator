@@ -159,6 +159,8 @@ function BoatConfig(questionsData) {
     agreePolicies: true,
     subscribe: true
   });
+  const [formSubmitting, setFormSubitting] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false);
+  const [formSubmitMessage, setFormSubmitMessage] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)('');
   (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
     setQuestion(questionsData.questions[currentIndex]);
     setProgress(currentIndex / (questionsData.questions.length - 1) * 100);
@@ -182,9 +184,8 @@ function BoatConfig(questionsData) {
   };
   const handleSubmit = e => {
     e.preventDefault();
-    console.log('Form submitted!');
     var formData = jQuery('#bc-form').serialize();
-    console.log(formData);
+    setFormSubitting(true);
     jQuery.ajax({
       url: questionsData.ajaxUrl,
       type: 'POST',
@@ -197,46 +198,17 @@ function BoatConfig(questionsData) {
       success: function (response) {
         if (response.success) {
           console.log('success: ', response.data.text);
+          setFormSubmitMessage('Data submitted successfully!');
         } else {
           console.log('Error:', response);
+          setFormSubmitMessage('Ooops! Something went wrong... please try again!');
         }
       },
       error: function (xhr, status, error) {
         console.log('AJAX error:', xhr.responseText);
+        setFormSubmitMessage('Ooops! Something went wrong... please try again!');
       }
     });
-
-    // (function ($) {
-
-    //         $('#bc-form').submit(function(event) {
-    //             // Prevent the default form submission behavior
-    //             event.preventDefault();
-
-    //             // Serialize the form data just before sending the AJAX request
-    //             var formData = $(this).serialize();
-
-    //             $.ajax({
-    //                 url: questionsData.ajaxUrl,
-    //                 type: 'POST',
-    //                 data: {
-    //                     action: 'handle_form_submission',
-    //                     security: questionsData.feNonce, // Include nonce in the data payload
-    //                     form_data: formData,
-    //                 }, 
-    //                 success: function(response) {
-    //                     if(response.success) {
-    //                         console.log('success: ', response.text);
-    //                     } else {
-    //                         console.log('Error:', response);
-    //                     }
-    //                 },
-    //                 error: function(xhr, status, error) {
-    //                     console.log('AJAX error:', xhr.responseText);
-    //                 }
-    //             });
-    //         });
-
-    // })(jQuery);
 
     // const emailInput = document.getElementById('email').value;
     // const errorMessage = document.getElementById('email-error');
@@ -255,24 +227,6 @@ function BoatConfig(questionsData) {
     //     }
     //     return;
     // }
-
-    // let currentElement = e.target;
-    // console.log(currentElement.tagName);
-
-    // // Traverse up the DOM tree until a form element is found or until reaching the document root
-    // while (currentElement && currentElement.tagName !== 'FORM') {
-    //     currentElement = currentElement.parentNode;
-    //     console.log(currentElement.tagName);
-    // }
-
-    // if (currentElement.tagName === 'FORM') {
-    //     currentElement.submit();
-    // } else {
-    //     console.log('nerado formos');
-    // }
-
-    // console.log('submit succesful');
-    // console.log(answers);
   };
   const countryOptions = [{
     value: "US",
@@ -909,7 +863,7 @@ function BoatConfig(questionsData) {
       required: true
     }
   }];
-  return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("form", {
+  return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, !formSubmitting && (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("form", {
     id: "bc-form"
   }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "bc-frontend"
@@ -1041,29 +995,10 @@ function BoatConfig(questionsData) {
     class: "next",
     onClick: handleSubmit,
     disabled: false
-  }, "Submit"))));
+  }, "Submit")))), formSubmitting && (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, formSubmitMessage === '' && (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    class: "loader"
+  }), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", null, "Form is submitting...")), formSubmitMessage !== '' && (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", null, formSubmitMessage))));
 }
-
-// function handleFormSubmit(event) {
-
-//     $.ajax({
-//         url: 'your_form_submit_url',
-//         type: 'POST',
-//         data: $(this).serialize(), // Serialize the form data
-//         success: function(response) {
-//             if(response.success) {
-//                 window.location.href = response.data.redirect_url; // Redirect on success
-//             } else {
-//                 console.log('Error:', response.data.message);
-//             }
-//         },
-//         error: function(xhr, status, error) {
-//             console.log('AJAX error:', xhr.responseText);
-//         }
-//     });
-
-// };
-
 function validateEmail(email) {
   // Test for the minimum length the email can be
   if (email.trim().length < 6) {

@@ -62,6 +62,8 @@ function BoatConfig(questionsData) {
         agreePolicies: true,
         subscribe: true,
     });
+    const [formSubmitting, setFormSubitting] = useState(false);
+    const [formSubmitMessage, setFormSubmitMessage] = useState('');
     
 
     useEffect(() => {
@@ -92,10 +94,8 @@ function BoatConfig(questionsData) {
     const handleSubmit = (e) => {
         e.preventDefault();
 
-        console.log('Form submitted!');
-
         var formData = jQuery('#bc-form').serialize();
-        console.log(formData);
+        setFormSubitting(true);
 
                     jQuery.ajax({
                         url: questionsData.ajaxUrl,
@@ -108,12 +108,15 @@ function BoatConfig(questionsData) {
                         success: function(response) {
                             if(response.success) {
                                 console.log('success: ', response.data.text);
+                                setFormSubmitMessage('Data submitted successfully!');
                             } else {
                                 console.log('Error:', response);
+                                setFormSubmitMessage('Ooops! Something went wrong... please try again!');
                             }
                         },
                         error: function(xhr, status, error) {
                             console.log('AJAX error:', xhr.responseText);
+                            setFormSubmitMessage('Ooops! Something went wrong... please try again!');
                         }
                     });
 
@@ -350,138 +353,162 @@ function BoatConfig(questionsData) {
 
 
     return (
-        <form id='bc-form'>
-            <div className='bc-frontend'>
-                <div className='pagination-progress'>
-                    <p className='progress-label'>{progress.toFixed(0)} %</p>
-                    <div className="progress-bar">
-                        <span style={{ width: `${progress}%` }}></span>
-                    </div>
-                </div>
-                <div key={currentIndex} class={`question-container ${currentIndex === questionsData.questions.length - 1 ? 'contact' : ''}`}>
-                    {currentIndex !== questionsData.questions.length - 1 ? (
+        <>
+        {   
+            !formSubmitting && 
+                <form id='bc-form'>
+                    <div className='bc-frontend'>
+                        <div className='pagination-progress'>
+                            <p className='progress-label'>{progress.toFixed(0)} %</p>
+                            <div className="progress-bar">
+                                <span style={{ width: `${progress}%` }}></span>
+                            </div>
+                        </div>
+                        <div key={currentIndex} class={`question-container ${currentIndex === questionsData.questions.length - 1 ? 'contact' : ''}`}>
+                            {currentIndex !== questionsData.questions.length - 1 ? (
 
 
-                        <p>{question.text}</p>
+                                <p>{question.text}</p>
 
-                    ) : (
-                        <p>Craft the future of your nautical adventures with Hendrixon. By providing your details below, a Hendrixon expert from your local dealership will extend a precise and tailored quote for your custom-built vessel. </p>
+                            ) : (
+                                <p>Craft the future of your nautical adventures with Hendrixon. By providing your details below, a Hendrixon expert from your local dealership will extend a precise and tailored quote for your custom-built vessel. </p>
 
-                    )}
+                            )}
 
-                    <div class={`options-container ${currentIndex === questionsData.questions.length - 1 ? 'contact' : ''}`}>
+                            <div class={`options-container ${currentIndex === questionsData.questions.length - 1 ? 'contact' : ''}`}>
 
-                        {currentIndex !== questionsData.questions.length - 1 ? (
-                            question.options.map((option, optionIndex) => (
-                                <label key={optionIndex} class="option-label">
-                                    <input
-                                        type="radio"
-                                        name={question.text}
-                                        value={option.optionText}
-                                        id={`${currentIndex}_${optionIndex}`}
-                                        onChange={() => updateAnswers(question.text, option.optionText)}
-                                    />
-                                    <div className="card">
-                                        <div className="top-text">
-                                            {option.optionText}
-                                        </div>
-                                        <div className="img">
-                                            {option.imgUrl && <img src={option.imgUrl} alt={option.text} />}
-                                            {option.color && <div style={{ background: option.color }}></div>}
-                                        </div>
-                                    </div>
-                                </label>
-                            ))
-                        ) : (
-                            <>
-                                {contactFormFields.map((field, fieldindex) => (
-
-                                    <div className='contact-row'>
-                                        <div class="col-5">
-                                            <label class="input-bc-custom">
-                                                {field.type !== 'select' ?
-                                                    <input
-                                                        class="input-bc-custom__field"
-                                                        type={field.type}
-                                                        placeholder=" "
-                                                        style={{ fontSize: "20px" }}
-                                                        id={field.id}
-                                                        name={field.id}
-                                                        value={answers[field.id]}
-                                                        onChange={(e) => updateAnswers(field.id, e.target.value)}
-                                                        {...field.required}
-                                                    />
-                                                    :
-                                                    <select
-                                                        class="input-bc-custom__field"
-                                                        type={field.type}
-                                                        placeholder=" "
-                                                        style={{ fontSize: "20px" }}
-                                                        id={field.id}
-                                                        name={field.id}
-                                                        value={answers[field.id]}
-                                                        onChange={(e) => updateAnswers(field.id, e.target.value)}
-                                                        {...field.required}
-                                                    >
-                                                        {field.options.map((option, optionIndex) => (
-                                                            <option value={option.value}>{option.text}</option>
-                                                        ))}
-                                                    </select>
-                                                }
-
-                                                <span class="input-bc-custom__label">{field.label}</span>
-                                            </label>
-                                        </div>
-                                    </div>
-                                ))}
-
-                                {[{id: 'subscribe', text: 'Embrace the future of boating by subscribing to receive updates from Hendrixon. Be the first to learn about new product launches, exclusive events, and more. By selecting "I agree," you authorize Hendrixon and our trusted partners to utilize your personal information for marketing and promotional activities. Set sail on a journey of innovation and luxury with us—where every update brings you closer to the voyage of your dreams.'},
-                                {id: 'agreePolicies', text: 'By clicking this box, I acknowledge and accept the '}].map((checkbox, chId) => (
-                                <div className='contact-row'>
-                                    <div class="col-5">
-                                        <label class="input-bc-custom" style={{ display: 'flex', alignItems: 'flex-start' }}>
+                                {currentIndex !== questionsData.questions.length - 1 ? (
+                                    question.options.map((option, optionIndex) => (
+                                        <label key={optionIndex} class="option-label">
                                             <input
-                                                class="input-bc-custom__field"
-                                                type='checkbox'
-                                                placeholder=" "
-                                                style={{ fontSize: "20px", width: 'auto' }}
-                                                id="subscribe"
-                                                value={answers[checkbox.id]}
-                                                onClick={(e) => updateAnswers(checkbox.id, e.target.checked)}
-                                                defaultChecked="true"
+                                                type="radio"
+                                                name={question.text}
+                                                value={option.optionText}
+                                                id={`${currentIndex}_${optionIndex}`}
+                                                onChange={() => updateAnswers(question.text, option.optionText)}
                                             />
-                                            <p style={{ margin: '3px 0 0 0', padding: '0 0 0 1em', fontSize: '10px' }}>
-                                                    {checkbox.id === 'subscribe' ? checkbox.text : (
-                                                        <>
-                                                            {checkbox.text}
-                                                            <a href={privacyPolicyUrl} target="_blank" rel="noopener noreferrer" title="This link opens in new tab">Policies &amp; Terms</a>
-                                                        </>
-                                                    )}    
-                                            </p>
+                                            <div className="card">
+                                                <div className="top-text">
+                                                    {option.optionText}
+                                                </div>
+                                                <div className="img">
+                                                    {option.imgUrl && <img src={option.imgUrl} alt={option.text} />}
+                                                    {option.color && <div style={{ background: option.color }}></div>}
+                                                </div>
+                                            </div>
                                         </label>
-                                    </div>
-                                </div>
-                                ))}
-                                
-                            </>
+                                    ))
+                                ) : (
+                                    <>
+                                        {contactFormFields.map((field, fieldindex) => (
 
-                        )}
+                                            <div className='contact-row'>
+                                                <div class="col-5">
+                                                    <label class="input-bc-custom">
+                                                        {field.type !== 'select' ?
+                                                            <input
+                                                                class="input-bc-custom__field"
+                                                                type={field.type}
+                                                                placeholder=" "
+                                                                style={{ fontSize: "20px" }}
+                                                                id={field.id}
+                                                                name={field.id}
+                                                                value={answers[field.id]}
+                                                                onChange={(e) => updateAnswers(field.id, e.target.value)}
+                                                                {...field.required}
+                                                            />
+                                                            :
+                                                            <select
+                                                                class="input-bc-custom__field"
+                                                                type={field.type}
+                                                                placeholder=" "
+                                                                style={{ fontSize: "20px" }}
+                                                                id={field.id}
+                                                                name={field.id}
+                                                                value={answers[field.id]}
+                                                                onChange={(e) => updateAnswers(field.id, e.target.value)}
+                                                                {...field.required}
+                                                            >
+                                                                {field.options.map((option, optionIndex) => (
+                                                                    <option value={option.value}>{option.text}</option>
+                                                                ))}
+                                                            </select>
+                                                        }
 
+                                                        <span class="input-bc-custom__label">{field.label}</span>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        ))}
+
+                                        {[{ id: 'subscribe', text: 'Embrace the future of boating by subscribing to receive updates from Hendrixon. Be the first to learn about new product launches, exclusive events, and more. By selecting "I agree," you authorize Hendrixon and our trusted partners to utilize your personal information for marketing and promotional activities. Set sail on a journey of innovation and luxury with us—where every update brings you closer to the voyage of your dreams.' },
+                                        { id: 'agreePolicies', text: 'By clicking this box, I acknowledge and accept the ' }].map((checkbox, chId) => (
+                                            <div className='contact-row'>
+                                                <div class="col-5">
+                                                    <label class="input-bc-custom" style={{ display: 'flex', alignItems: 'flex-start' }}>
+                                                        <input
+                                                            class="input-bc-custom__field"
+                                                            type='checkbox'
+                                                            placeholder=" "
+                                                            style={{ fontSize: "20px", width: 'auto' }}
+                                                            id="subscribe"
+                                                            value={answers[checkbox.id]}
+                                                            onClick={(e) => updateAnswers(checkbox.id, e.target.checked)}
+                                                            defaultChecked="true"
+                                                        />
+                                                        <p style={{ margin: '3px 0 0 0', padding: '0 0 0 1em', fontSize: '10px' }}>
+                                                            {checkbox.id === 'subscribe' ? checkbox.text : (
+                                                                <>
+                                                                    {checkbox.text}
+                                                                    <a href={privacyPolicyUrl} target="_blank" rel="noopener noreferrer" title="This link opens in new tab">Policies &amp; Terms</a>
+                                                                </>
+                                                            )}
+                                                        </p>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        ))}
+
+                                    </>
+
+                                )}
+
+                            </div>
+                        </div>
+
+
+
+
+
+                        <div class={` pagination-footer ${currentIndex === 0 ? 'previous-disabled' : ''}`}>
+                            <button type="button" class="previous" onClick={handlePrevClick} disabled={currentIndex === 0}>Previous</button>
+                            <button type="button" class="next" onClick={handleNextClick} disabled={currentIndex === questionsData.questions.length - 1}>Next</button>
+                            {currentIndex === questionsData.questions.length - 1 && <button type="submit" id="submit_form" class="next" onClick={handleSubmit} disabled={false}>Submit</button>}
+                        </div>
                     </div>
-                </div>
+                </form>
+        } 
+        {
+            formSubmitting &&
+                    <div>
+                        {formSubmitMessage === '' && 
+                        <>
+                        <div class="loader"></div>
+                        <p>Form is submitting...</p>
+                        </>
+                        }
+                        {formSubmitMessage !== '' && 
+                        <>
+                        <p>{formSubmitMessage}</p>
+                        </>
+                        }
+                        
+                    </div>
+        }
 
-
-
-
-
-                <div class={` pagination-footer ${currentIndex === 0 ? 'previous-disabled' : ''}`}>
-                    <button type="button" class="previous" onClick={handlePrevClick} disabled={currentIndex === 0}>Previous</button>
-                    <button type="button" class="next" onClick={handleNextClick} disabled={currentIndex === questionsData.questions.length - 1}>Next</button>
-                    {currentIndex === questionsData.questions.length - 1 && <button type="submit" id="submit_form" class="next" onClick={handleSubmit} disabled={false}>Submit</button>}
-                </div>
-            </div>
-        </form>
-        /* HTML: <div class="loader"></div> */
+        
+        </>
+        
     );
 }
 
