@@ -5,9 +5,7 @@ import ReactDOM from 'react-dom';
 document.addEventListener('DOMContentLoaded', function () {
 
     const bcDataFront = bcData;
-    console.log(bcDataFront);
     renderForm(bcDataFront);
-
     document.getElementById('create-block-boat-configurator-script-js-before').remove();
 
 
@@ -87,7 +85,8 @@ function BoatConfig(questionsData) {
         const formData = {
             contactInfo: contactInfo,
             questionAnswers: questionAnswers,
-            postId: questionsData.postId
+            postId: questionsData.postId,
+            subscribe: answers.subscribe
         };
         console.log(formData);
         // var formData = jQuery('#bc-form').serialize();
@@ -451,7 +450,7 @@ function BoatConfig(questionsData) {
                                                             onClick={(e) => updateAnswers(checkbox.id, e.target.checked)}
                                                             defaultChecked="true"
                                                         />
-                                                        <p style={{ margin: '3px 0 0 0', padding: '0 0 0 1em', fontSize: '10px' }}>
+                                                        <p style={{ margin: '3px 0 0 0', padding: '0 0 0 1em', fontSize: '10px', textAlign: justify }}>
                                                             {checkbox.id === 'subscribe' ? checkbox.text : (
                                                                 <>
                                                                     {checkbox.text}

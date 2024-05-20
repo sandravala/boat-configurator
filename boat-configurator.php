@@ -126,69 +126,69 @@ function enqueue_custom_script() {
 }
 add_action('admin_enqueue_scripts', 'enqueue_custom_script');
 
-add_action('wp_ajax_fetch_bc_questions', 'fetch_bc_question_data');
-add_action('wp_ajax_nopriv_fetch_bc_questions', 'fetch_bc_question_data');
+// add_action('wp_ajax_fetch_bc_questions', 'fetch_bc_question_data');
+// add_action('wp_ajax_nopriv_fetch_bc_questions', 'fetch_bc_question_data');
 
-function fetch_bc_question_data()
-{
+// function fetch_bc_question_data()
+// {
 
-    if (!check_ajax_referer('bc_frontend_view_nonce', 'security')) {
-        wp_send_json_error(array('message' => 'Security check failed'));
-        return;
-    }
+//     if (!check_ajax_referer('bc_frontend_view_nonce', 'security')) {
+//         wp_send_json_error(array('message' => 'Security check failed'));
+//         return;
+//     }
 
-    // Ensure the post ID is present
-    $post_id = isset($_GET['post_id']) ? intval($_GET['post_id']) : 0;
-    if (!$post_id) {
-        wp_send_json_error(array('message' => 'Invalid post ID'));
-        return;
-    }
+//     // Ensure the post ID is present
+//     $post_id = isset($_GET['post_id']) ? intval($_GET['post_id']) : 0;
+//     if (!$post_id) {
+//         wp_send_json_error(array('message' => 'Invalid post ID'));
+//         return;
+//     }
 
-    // Retrieve the post and parse its content
-    $post = get_post($post_id);
-    if (!$post) {
-        wp_send_json_error(array('message' => 'Post not found'));
-        return;
-    }
+//     // Retrieve the post and parse its content
+//     $post = get_post($post_id);
+//     if (!$post) {
+//         wp_send_json_error(array('message' => 'Post not found'));
+//         return;
+//     }
 
-    $blocks = parse_blocks($post->post_content);
-    $boat_configurator_block = null;
+//     $blocks = parse_blocks($post->post_content);
+//     $boat_configurator_block = null;
 
-    $boat_configurator_block = find_nested_block($blocks, 'create-block/boat-configurator');
+//     $boat_configurator_block = find_nested_block($blocks, 'create-block/boat-configurator');
 
-    if ($boat_configurator_block) {
-        $model = $boat_configurator_block['attrs']['model'] ?? 'No model provided';
-        $questions = $boat_configurator_block['attrs']['questions'] ?? [];
-        $response_data = [
-            'model' => $model,
-            'questions' => $questions,
-        ];
-        wp_send_json_success($response_data);
-    } else {
-        wp_send_json_error(['message' => 'No configurator block found']);
-    }
+//     if ($boat_configurator_block) {
+//         $model = $boat_configurator_block['attrs']['model'] ?? 'No model provided';
+//         $questions = $boat_configurator_block['attrs']['questions'] ?? [];
+//         $response_data = [
+//             'model' => $model,
+//             'questions' => $questions,
+//         ];
+//         wp_send_json_success($response_data);
+//     } else {
+//         wp_send_json_error(['message' => 'No configurator block found']);
+//     }
 
-}
+// }
 
-function find_nested_block(array $blocks, $target_block_name)
-{
-    foreach ($blocks as $block) {
-        // Check if the current block is the one we're looking for
-        if ($block['blockName'] === $target_block_name) {
-            return $block; // Return the block if it matches the target
-        }
+// function find_nested_block(array $blocks, $target_block_name)
+// {
+//     foreach ($blocks as $block) {
+//         // Check if the current block is the one we're looking for
+//         if ($block['blockName'] === $target_block_name) {
+//             return $block; // Return the block if it matches the target
+//         }
 
-        // If the block has inner blocks, recursively search through them
-        if (isset($block['innerBlocks']) && !empty($block['innerBlocks'])) {
-            $found_block = find_nested_block($block['innerBlocks'], $target_block_name);
-            if ($found_block) {
-                return $found_block; // Return the block if found in inner blocks
-            }
-        }
-    }
+//         // If the block has inner blocks, recursively search through them
+//         if (isset($block['innerBlocks']) && !empty($block['innerBlocks'])) {
+//             $found_block = find_nested_block($block['innerBlocks'], $target_block_name);
+//             if ($found_block) {
+//                 return $found_block; // Return the block if found in inner blocks
+//             }
+//         }
+//     }
 
-    return null; // Return null if no matching block is found
-}
+//     return null; // Return null if no matching block is found
+// }
 
 // Hook into the 'save_post' action
 add_action('save_post', 'update_post_title_and_thumbnail', 10, 3);

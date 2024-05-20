@@ -106,7 +106,6 @@ __webpack_require__.r(__webpack_exports__);
 
 document.addEventListener('DOMContentLoaded', function () {
   const bcDataFront = bcData;
-  console.log(bcDataFront);
   renderForm(bcDataFront);
   document.getElementById('create-block-boat-configurator-script-js-before').remove();
 });
@@ -174,7 +173,8 @@ function BoatConfig(questionsData) {
     const formData = {
       contactInfo: contactInfo,
       questionAnswers: questionAnswers,
-      postId: questionsData.postId
+      postId: questionsData.postId,
+      subscribe: answers.subscribe
     };
     console.log(formData);
     // var formData = jQuery('#bc-form').serialize();
@@ -964,7 +964,8 @@ function BoatConfig(questionsData) {
     style: {
       margin: '3px 0 0 0',
       padding: '0 0 0 1em',
-      fontSize: '10px'
+      fontSize: '10px',
+      textAlign: justify
     }
   }, checkbox.id === 'subscribe' ? checkbox.text : (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, checkbox.text, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
     href: privacyPolicyUrl,

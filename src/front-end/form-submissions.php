@@ -116,11 +116,23 @@ function handle_form_submission()
     $mailerLite = new MailerLite(['api_key' => $api_key]);
     
     $data = [
-        'email' => 'subscriber@example.com',
+        'email' => 'anothersubscriber@example.com',
+        "fields" => [
+            "name" => "Dummy",
+            "last_name" => "Testerson",
+            "city" => null,
+      "country" => null,
+      "phone" => null,
+      "state" => null,
+      "z_i_p" => null
+        ],
+        "groups"=> [
+            "121874853504485179",
+        ]
     ];
     
     $response = $mailerLite->subscribers->create($data);
-    error_log($response);
+    error_log(print_r($response, true));
 
     error_log('before wp_send_json_success');
     wp_send_json_success(array(
