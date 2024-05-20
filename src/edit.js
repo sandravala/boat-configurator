@@ -33,8 +33,13 @@ import { useState } from 'react';
  * @see https://developer.wordpress.org/block-editor/reference-guides/block-api/block-edit-save/#edit
  *
  * @return {Element} Element to render.
+ * 
+ * 
  */
+
 export default function Edit(props) {
+
+
 
 	const [accordionStates, setAccordionStates] = useState({});
 
@@ -98,7 +103,7 @@ export default function Edit(props) {
 		props.setAttributes({
 			questions: props.attributes.questions.concat([{
 				"text": "",
-				"options": [{ "text": "", "imgUrl": "", "color": "" }]
+				"options": [{ "optionText": "", "imgUrl": "", "color": "" }]
 			}])
 		})
 		setColorPickerStates(prevState => [...prevState, []]);
@@ -110,7 +115,7 @@ export default function Edit(props) {
 		const currentOptions = props.attributes.questions[questionIndex].options;
 
 		// Create a new array of options by concatenating a new empty option object
-		const newOptions = [...currentOptions, { "text": "", "imgUrl": "", "color": "" }];
+		const newOptions = [...currentOptions, { "optionText": "", "imgUrl": "", "color": "" }];
 
 		// Update the questions attribute with the new options array
 		props.setAttributes({
@@ -274,7 +279,7 @@ export default function Edit(props) {
 																			)}
 																		</div>
 																		<div class="img">
-																			{option.imgUrl && <img src={option.imgUrl} alt={option.text} />}
+																			{option.imgUrl && <img src={option.imgUrl} alt={option.optionText} />}
 																			{option.color && <div style={{ background: option.color, height: '100%', width: '100%' }}></div>}
 
 																		</div>
@@ -307,6 +312,8 @@ export default function Edit(props) {
 		</>
 	)
 }
+
+
 
 
 //5. Laivo konfiguracijos pasirinkimai:

@@ -55,7 +55,10 @@ __webpack_require__.r(__webpack_exports__);
  * @see https://developer.wordpress.org/block-editor/reference-guides/block-api/block-edit-save/#edit
  *
  * @return {Element} Element to render.
+ * 
+ * 
  */
+
 function Edit(props) {
   const [accordionStates, setAccordionStates] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)({});
   function toggleAccordion(questionIndex) {
@@ -118,7 +121,7 @@ function Edit(props) {
       questions: props.attributes.questions.concat([{
         "text": "",
         "options": [{
-          "text": "",
+          "optionText": "",
           "imgUrl": "",
           "color": ""
         }]
@@ -132,7 +135,7 @@ function Edit(props) {
 
     // Create a new array of options by concatenating a new empty option object
     const newOptions = [...currentOptions, {
-      "text": "",
+      "optionText": "",
       "imgUrl": "",
       "color": ""
     }];
@@ -326,7 +329,7 @@ function Edit(props) {
         class: "img"
       }, option.imgUrl && (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("img", {
         src: option.imgUrl,
-        alt: option.text
+        alt: option.optionText
       }), option.color && (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
         style: {
           background: option.color,

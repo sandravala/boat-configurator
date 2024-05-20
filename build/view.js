@@ -104,40 +104,6 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-/* eslint-disable no-console */
-// console.log('Hello World! (from create-block-boat-configurator block)');
-/* eslint-enable no-console */
-
-// jQuery(document).ready(function ($) {
-
-//     $.ajax({
-//         url: bc_fe_ajax_data.ajax_url,
-//         type: 'GET',
-//         data: {
-//             action: 'fetch_bc_questions',
-//             security: bc_fe_ajax_data.security,
-//             post_id: bc_fe_ajax_data.post_id
-//         },
-//         dataType: 'json',
-//         success: function (response) {
-//             if (response.success) {
-//                 var questions = response.data;
-
-//                 // Process the retrieved questions
-//                 console.log(questions);
-//                 renderForm(questions);
-
-//             } else {
-//                 console.error('Error retrieving questions:', response.data);
-//             }
-//         },
-//         error: function (xhr, status, error) {
-//             console.error('AJAX error:', error);
-//         }
-//     });
-
-// });
-
 document.addEventListener('DOMContentLoaded', function () {
   const bcDataFront = bcData;
   console.log(bcDataFront);
@@ -163,16 +129,18 @@ function BoatConfig(questionsData) {
   const [formSubmitMessage, setFormSubmitMessage] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)('');
   const [formSubmitSuccess, setFormSubmitSuccess] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false);
   (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
-    setQuestion(questionsData.questions[currentIndex]);
-    setProgress(currentIndex / (questionsData.questions.length - 1) * 100);
-  }, [currentIndex, questionsData.questions]);
+    if (currentIndex <= questionsData.questions.length - 1) {
+      setQuestion(questionsData.questions[currentIndex]);
+    }
+    setProgress(currentIndex / questionsData.questions.length * 100);
+  }, [currentIndex]);
   const handlePrevClick = () => {
     if (currentIndex > 0) {
       setCurrentIndex(currentIndex - 1);
     }
   };
   const handleNextClick = () => {
-    if (currentIndex < questionsData.questions.length - 1) {
+    if (currentIndex <= questionsData.questions.length - 1) {
       setCurrentIndex(currentIndex + 1);
     }
   };
@@ -184,7 +152,6 @@ function BoatConfig(questionsData) {
       ...prev,
       [questionIdentifier]: answer
     }));
-    console.log(answers);
   };
   const handleSubmit = e => {
     e.preventDefault();
@@ -206,7 +173,8 @@ function BoatConfig(questionsData) {
     // Prepare data to be sent to the backend
     const formData = {
       contactInfo: contactInfo,
-      questionAnswers: questionAnswers
+      questionAnswers: questionAnswers,
+      postId: questionsData.postId
     };
     console.log(formData);
     // var formData = jQuery('#bc-form').serialize();
@@ -906,9 +874,9 @@ function BoatConfig(questionsData) {
   }))), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     key: currentIndex,
     class: `question-container ${currentIndex === questionsData.questions.length - 1 ? 'contact' : ''}`
-  }, currentIndex !== questionsData.questions.length - 1 ? (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", null, question.text) : (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", null, "Craft the future of your nautical adventures with Hendrixon. By providing your details below, a Hendrixon expert from your local dealership will extend a precise and tailored quote for your custom-built vessel. "), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+  }, currentIndex <= questionsData.questions.length - 1 ? (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", null, question.text) : (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", null, "Craft the future of your nautical adventures with Hendrixon. By providing your details below, a Hendrixon expert from your local dealership will extend a precise and tailored quote for your custom-built vessel. "), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     class: `options-container ${currentIndex === questionsData.questions.length - 1 ? 'contact' : ''}`
-  }, currentIndex !== questionsData.questions.length - 1 ? question.options.map((option, optionIndex) => (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("label", {
+  }, currentIndex <= questionsData.questions.length - 1 ? question.options.map((option, optionIndex) => (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("label", {
     key: optionIndex,
     class: "option-label"
   }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("input", {
@@ -1014,8 +982,8 @@ function BoatConfig(questionsData) {
     type: "button",
     class: "next",
     onClick: handleNextClick,
-    disabled: currentIndex === questionsData.questions.length - 1
-  }, "Next"), currentIndex === questionsData.questions.length - 1 && (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
+    disabled: currentIndex > questionsData.questions.length - 1
+  }, "Next"), currentIndex > questionsData.questions.length - 1 && (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
     type: "submit",
     id: "submit_form",
     class: "next",

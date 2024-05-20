@@ -1,39 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import ReactDOM from 'react-dom';
-/* eslint-disable no-console */
-// console.log('Hello World! (from create-block-boat-configurator block)');
-/* eslint-enable no-console */
 
-// jQuery(document).ready(function ($) {
-
-
-//     $.ajax({
-//         url: bc_fe_ajax_data.ajax_url,
-//         type: 'GET',
-//         data: {
-//             action: 'fetch_bc_questions',
-//             security: bc_fe_ajax_data.security,
-//             post_id: bc_fe_ajax_data.post_id
-//         },
-//         dataType: 'json',
-//         success: function (response) {
-//             if (response.success) {
-//                 var questions = response.data;
-
-//                 // Process the retrieved questions
-//                 console.log(questions);
-//                 renderForm(questions);
-
-//             } else {
-//                 console.error('Error retrieving questions:', response.data);
-//             }
-//         },
-//         error: function (xhr, status, error) {
-//             console.error('AJAX error:', error);
-//         }
-//     });
-
-// });
 
 document.addEventListener('DOMContentLoaded', function () {
 
@@ -69,9 +36,12 @@ function BoatConfig(questionsData) {
 
 
     useEffect(() => {
-        setQuestion(questionsData.questions[currentIndex]);
-        setProgress(((currentIndex) / (questionsData.questions.length - 1)) * 100);
-    }, [currentIndex, questionsData.questions]);
+        if(currentIndex <= questionsData.questions.length - 1) {
+            setQuestion(questionsData.questions[currentIndex]);
+        }
+        
+        setProgress(((currentIndex) / (questionsData.questions.length)) * 100);
+    }, [currentIndex]);
 
     const handlePrevClick = () => {
         if (currentIndex > 0) {
@@ -80,7 +50,8 @@ function BoatConfig(questionsData) {
     };
 
     const handleNextClick = () => {
-        if (currentIndex < questionsData.questions.length - 1) {
+
+        if (currentIndex <= questionsData.questions.length - 1) {
             setCurrentIndex(currentIndex + 1);
         }
     };
@@ -92,7 +63,7 @@ function BoatConfig(questionsData) {
             ...prev,
             [questionIdentifier]: answer
         }));
-        console.log(answers);
+
     };
 
     const handleSubmit = (e) => {
@@ -115,7 +86,8 @@ function BoatConfig(questionsData) {
         // Prepare data to be sent to the backend
         const formData = {
             contactInfo: contactInfo,
-            questionAnswers: questionAnswers
+            questionAnswers: questionAnswers,
+            postId: questionsData.postId
         };
         console.log(formData);
         // var formData = jQuery('#bc-form').serialize();
@@ -375,8 +347,6 @@ function BoatConfig(questionsData) {
         { type: 'text', id: 'zip', label: 'Zip Code*', required: { required: true } }
     ]
 
-
-
     return (
         <>
             {
@@ -390,7 +360,7 @@ function BoatConfig(questionsData) {
                             </div>
                         </div>
                         <div key={currentIndex} class={`question-container ${currentIndex === questionsData.questions.length - 1 ? 'contact' : ''}`}>
-                            {currentIndex !== questionsData.questions.length - 1 ? (
+                            {currentIndex <= questionsData.questions.length - 1 ? (
 
 
                                 <p>{question.text}</p>
@@ -402,7 +372,7 @@ function BoatConfig(questionsData) {
 
                             <div class={`options-container ${currentIndex === questionsData.questions.length - 1 ? 'contact' : ''}`}>
 
-                                {currentIndex !== questionsData.questions.length - 1 ? (
+                                {currentIndex <= questionsData.questions.length - 1 ? (
                                     question.options.map((option, optionIndex) => (
                                         <label key={optionIndex} class="option-label">
                                             <input
@@ -507,8 +477,8 @@ function BoatConfig(questionsData) {
 
                         <div class={` pagination-footer ${currentIndex === 0 ? 'previous-disabled' : ''}`}>
                             <button type="button" class="previous" onClick={handlePrevClick} disabled={currentIndex === 0}>Previous</button>
-                            <button type="button" class="next" onClick={handleNextClick} disabled={currentIndex === questionsData.questions.length - 1}>Next</button>
-                            {currentIndex === questionsData.questions.length - 1 && <button type="submit" id="submit_form" class="next" onClick={handleSubmit} disabled={false}>Submit</button>}
+                            <button type="button" class="next" onClick={handleNextClick} disabled={currentIndex > questionsData.questions.length - 1}>Next</button>
+                            {currentIndex > questionsData.questions.length - 1 && <button type="submit" id="submit_form" class="next" onClick={handleSubmit} disabled={false}>Submit</button>}
                         </div>
                     </div>
                 </form>
@@ -548,11 +518,6 @@ function BoatConfig(questionsData) {
 
     );
 }
-
-
-
-
-
 
 function validateEmail(email) {
 

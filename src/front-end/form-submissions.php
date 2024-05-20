@@ -9,21 +9,17 @@ function handle_form_submission()
 
     error_log('entered handle_form_submission');
     if (!check_ajax_referer('bc_frontend_view_nonce', 'security')) {
-        error_log('Nonce verification failed');
         wp_send_json_error(array('message' => 'Invalid nonce'));
         wp_die();
     }
 
     if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-        error_log('Invalid request method');
         wp_send_json_error('Invalid request method');
         wp_die();
     }
 
 
     $form_data = $_POST['form_data'];
-
-    error_log(print_r($form_data, true));
 
     if (isset($form_data['questionAnswers'])) {
         $sanitizedQuestionAnswers = array();
@@ -32,13 +28,15 @@ function handle_form_submission()
         foreach ($form_data['questionAnswers'] as $questionText => $answer) {
             // Sanitize the text, imgUrl, and color values if they exist
             $sanitizedAnswer = array(
-                'text' => isset($answer['text']) ? sanitize_text_field($answer['text']) : '',
+                'text' => isset($answer['optionText']) ? sanitize_text_field($answer['optionText']) : '',
                 'imgUrl' => isset($answer['imgUrl']) ? esc_url_raw($answer['imgUrl']) : '',
                 'color' => isset($answer['color']) ? sanitize_hex_color($answer['color']) : '',
             );
 
+            $sanitizedQuestion = sanitize_text_field($questionText);
+
             // Add the sanitized answer to the sanitized array
-            $sanitizedQuestionAnswers[$questionText] = $sanitizedAnswer;
+            $sanitizedQuestionAnswers[$sanitizedQuestion] = $sanitizedAnswer;
         }
         // error_log(print_r($sanitizedQuestionAnswers, true));
     }
@@ -80,6 +78,8 @@ function handle_form_submission()
         // error_log(print_r($sanitizedContactInfo, true));
     }
 
+    $sanitizedPostId = absint( $form_data['postId'] );
+
     // Extract email and other fields
     $email = isset($sanitizedContactInfo['email']) ? sanitize_email($sanitizedContactInfo['email']) : '';
 
@@ -89,8 +89,8 @@ function handle_form_submission()
         return;
     }
 
-    // // Save to database
-    // saveBoatConfigToDB();
+    // Save to database
+    saveBoatConfigToDB( $sanitizedQuestionAnswers, $sanitizedContactInfo, $sanitizedPostId );
 
     // Send email to admin
     $admin_email = get_option('admin_email');
@@ -132,42 +132,38 @@ function handle_form_submission()
 
     //     $response = $mailerLite->subscribers->create($data);
 
-    //     wp_redirect(add_query_arg('thank_you', '1', $_POST['_wp_http_referer']));
-    //     //wp_redirect(plugin_dir_url(__FILE__) . 'thank-you.php');
-    //     exit;
-    //     // Sanitize and validate form data (you should implement your own sanitization/validation logic here)
-
-    //     // Insert form data into the database (you should create a custom database table for this purpose)
-
-    //     // Redirect or display success message to the user
-    // }
-
-    // Check if the form has been submitted
-
 }
 
-function saveBoatConfigToDB()
+function saveBoatConfigToDB( $sanitizedQuestionAnswers, $sanitizedContactInfo, $sanitizedPostId )
 {
-    // Retrieve form data from POST variables
-    $answers = isset($_POST['input_0']) ? $_POST['input_0'] : '';
-    $email = isset($_POST['email_input']) ? $_POST['email_input'] : 'no email';
-    // Retrieve other form data as needed
 
-    // Sanitize and validate form data (you should implement your own sanitization/validation logic here)
     global $wpdb;
     // Insert form data into the database table
     $table_name = $wpdb->prefix . DB_TABLE; // Replace 'your_table_name' with your actual table name
     $wpdb->insert(
         $table_name,
         array(
-            'answers' => $answers,
-            'email' => $email,
+            'post_id' => $sanitizedPostId,
+            'answers' =>maybe_serialize($sanitizedQuestionAnswers),
+            'first_name' => $sanitizedContactInfo['firstName'],
+            'last_name' => $sanitizedContactInfo['lastName'],
+            'email' => $sanitizedContactInfo['email'],
+            'phone' => $sanitizedContactInfo['phone'],
+            'country' => $sanitizedContactInfo['country'],
+            'city' => $sanitizedContactInfo['city'],
+            'zip' => $sanitizedContactInfo['zip'],
             // Insert other form fields as needed
         ),
         array(
-            '%s', // Format for 'question' column (string)
-            '%s', // Format for 'email' column (string)
-            // Add other formats for additional columns as needed
+            '%d',
+            '%s', 
+            '%s', 
+            '%s',
+            '%s',
+            '%s',
+            '%s',
+            '%s',
+            '%s'
         )
     );
     // Handle any additional actions after data insertion, such as sending emails, etc.

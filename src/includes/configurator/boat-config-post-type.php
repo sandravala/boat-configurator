@@ -14,7 +14,7 @@ function cpt_register_post_type()
 		'new_item'              => 'Naujas konfigūratorius',
 		'edit_item'             => 'Koreguoti',
 		'view_item'             => 'Peržiūrėti',
-		'all_items'             => 'Visi',
+		'all_items'             => 'Visi konfigūratoriai',
 		'search_items'          => 'Ieškoti',
 		'parent_item_colon'     => 'parent_item_colon',
 		'not_found'             => 'Konfigūratorių nėra',
@@ -23,7 +23,7 @@ function cpt_register_post_type()
 		'set_featured_image'    => 'Nustatyti laivo modelio nuotrauką',
 		'remove_featured_image' => 'Ištrinti laivo modelio nuotrauką',
 		'use_featured_image'    => 'Naudoti laivo modelio nuotrauką',
-		'archives'              => 'Laivo konfigūratorių archyvas',
+		'archives'              => 'Laivo konfigūratoriai',
 		'insert_into_item'      => 'Įterpti į konfigūratorių',
 		'uploaded_to_this_item' => 'Įkelta į konfigūratorių',
 		'filter_items_list'     => 'Filtruoti konfigūratorių sąrašą',
@@ -36,7 +36,8 @@ function cpt_register_post_type()
 		'public'             => true,
 		'publicly_queryable' => true,
 		'show_ui'            => true,
-		'show_in_menu'       => false,
+		'show_in_menu'       => true,
+		'menu_icon' => CONFIG_ICON,
 		'query_var'          => true,
 		'rewrite'            => array( 'slug' => 'boat-configurator' ),
 		'capability_type'    => 'page',
@@ -44,64 +45,20 @@ function cpt_register_post_type()
         'show_in_rest'          => true,
 		//'hierarchical'       => false,
 		//'menu_position'      => null,
-		'taxonomies'          => array( 'category' ),
+		//'taxonomies'          => array( 'category' ),
 		'supports'           => array( 'thumbnail', 'editor' ),
-        'template'              => array(
+		'template'           => array(
             array(
-				array( 'core/image', array(
-					'align' => 'left',
-				) ),
-				array( 'core/heading', array(
-					'placeholder' => 'Add Author...',
-				) ),
-				array( 'core/paragraph', array(
-					'placeholder' => 'Add Description...',
-				) ),
-			),
-        ),
+                'core/pattern',
+                array(
+                    'slug' => 'boat-configurator/boat-config-pattern',
+                ),
+            ),
+		),
 	);
 
     register_post_type('boat_config', $args);
+
 };
 
 add_action('init', 'cpt_register_post_type');
-
-// function configurator_template($template) {
-//     if (is_singular('boat_config')) {
-//         $custom_template = plugin_dir_path(__FILE__) . 'templates/single-boat-config.html';
-//         if (file_exists($custom_template)) {
-//             return $custom_template;
-//         }
-//     }
-//     return $template;
-// }
-// add_filter('template_include', 'configurator_template');
-
-// add_filter( 'template_include', 'configurator_template' );
-// function configurator_template( $template ) {
-
-//     $post_type = 'boat_config'; // Change this to the name of your custom post type!
-
-//     if ( is_post_type_archive( $post_type ) && file_exists( plugin_dir_path(__DIR__) . "templates/archive-$post_type.php" ) ){
-//         $template = plugin_dir_path(__DIR__) . "templates/archive-$post_type.php";
-//     }
-
-//     if ( is_singular( $post_type ) && file_exists( plugin_dir_path(__DIR__) . "templates/single-$post_type.php" ) ){
-//         $template = plugin_dir_path(__DIR__) . "templates/single-$post_type.php";
-//     }
-
-//     return $template;
-// }
-
-// add_filter( 'single_template', 'boat_config_template' );
-// function boat_config_template($single_template) {
-//      global $post;
-
-//      if ($post->post_type == 'boat_config' ) {
-//           $single_template = dirname( __FILE__ ) . '/templates/single-boat-config.html';
-//      }
-//      return $single_template;
-  
-// }
-
-
