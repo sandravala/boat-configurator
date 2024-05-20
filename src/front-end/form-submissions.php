@@ -103,6 +103,25 @@ function handle_form_submission()
         return;
     }
 
+    $data_encryption = new BC_Data_Encryption();
+    $api_key = get_option('our_api_key');
+
+    if ($api_key) {
+        $api_key = $data_encryption->decrypt(get_option('our_api_key'));
+    }
+    
+    // Correct variable name used here
+    error_log($api_key);
+    
+    $mailerLite = new MailerLite(['api_key' => $api_key]);
+    
+    $data = [
+        'email' => 'subscriber@example.com',
+    ];
+    
+    $response = $mailerLite->subscribers->create($data);
+    error_log($response);
+
     error_log('before wp_send_json_success');
     wp_send_json_success(array(
         'text' => 'all great',
@@ -121,16 +140,7 @@ function handle_form_submission()
 
     //     wp_mail($admin_email, $subject, $message);
 
-    //     $apiKey = MAILERLITE_KEY;
 
-    //     error_log($apiKey);
-    //     $mailerLite = new MailerLite(['api_key' =>  $apiKey]);
-
-    //     $data = [
-    //         'email' => 'subscriber@example.com',
-    //     ];
-
-    //     $response = $mailerLite->subscribers->create($data);
 
 }
 

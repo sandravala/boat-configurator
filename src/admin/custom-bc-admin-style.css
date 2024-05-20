@@ -160,4 +160,8 @@
   .pagination-container .pagination li.active a {
         color: #cc4806;
   }
+
+  form.bc-form-entries-search {
+    padding-left: .2em;
+  }
   

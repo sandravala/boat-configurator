@@ -54,3 +54,21 @@ function copy(text) {
 function linkCopiedAlert() {
     alert('Link copied to the clipboard!');
 }
+
+jQuery(document).ready(function($) {
+    $('#search-input').on('keyup', function() {
+        var searchQuery = $(this).val();
+
+        $.ajax({
+            url: ajaxurl,
+            type: 'GET',
+            data: {
+                action: 'boat_configurator_search_entries',
+                s: searchQuery
+            },
+            success: function(response) {
+                $('#entries-container').html(response);
+            }
+        });
+    });
+});
