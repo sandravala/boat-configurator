@@ -46,7 +46,7 @@ function cpt_register_post_type()
 		//'hierarchical'       => false,
 		//'menu_position'      => null,
 		//'taxonomies'          => array( 'category' ),
-		'supports'           => array( 'thumbnail', 'editor' ),
+		'supports'           => array( 'editor' ),
 		'template'           => array(
             array(
                 'core/pattern',

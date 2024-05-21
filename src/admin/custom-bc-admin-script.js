@@ -9,6 +9,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
         });
     });
+
+
 });
 
 
@@ -57,15 +59,20 @@ function linkCopiedAlert() {
 
 jQuery(document).ready(function($) {
     function fetchEntries() {
+
         var data = {
             action: 'boat_configurator_search_entries',
             s: $('#search-input').val(),
             start_date: $('#start_date').val(),
             end_date: $('#end_date').val(),
+            sort_column: $('#entries-container').data('sort-column'),
+            sort_order: $('#entries-container').data('sort-order'),
+            _ajax_nonce: $('#nonce').val() // Get nonce value
         };
 
+
         $.ajax({
-            url: ajaxurl, // Use the correct URL for AJAX requests
+            url: $('#ajax-url').val(), // Get ajaxurl value
             method: 'GET',
             data: data,
             success: function(response) {
@@ -78,8 +85,25 @@ jQuery(document).ready(function($) {
         fetchEntries();
     });
 
-    $('#search-form').on('submit', function(e) {
-        e.preventDefault();
+
+    $(document).on('click', '.sort-column', function() {
+        var column = $(this).data('column');
+        var order = $(this).data('order');
+
+        // Toggle sort order
+        if (order === 'asc') {
+            order = 'desc';
+        } else if (order === 'desc') {
+            order = 'none';
+        } else {
+            order = 'asc';
+        }
+
+        // Set the new sort data
+        $('#entries-container').data('sort-column', column);
+        $('#entries-container').data('sort-order', order);
+
         fetchEntries();
     });
+
 });

@@ -9,6 +9,8 @@ function boat_configurator_render_entries_page() {
     $search_query = isset($_GET['s']) ? sanitize_text_field($_GET['s']) : '';
     $start_date = isset($_GET['start_date']) ? sanitize_text_field($_GET['start_date']) : '';
     $end_date = isset($_GET['end_date']) ? sanitize_text_field($_GET['end_date']) :
+    $sort_column = isset($_GET['sort_column']) ? sanitize_text_field($_GET['sort_column']) : '';
+    $sort_order = isset($_GET['sort_order']) ? sanitize_text_field($_GET['sort_order']) : 'none';
 
 
     // Get total number of entries
@@ -26,15 +28,28 @@ function boat_configurator_render_entries_page() {
     // Calculate offset
     $offset = max(0, ($current_page - 1) * $entries_per_page);
 
+    // Prepare sorting part of the query
+    $sort_query = '';
+    if ($sort_column && in_array($sort_order, ['asc', 'desc'])) {
+        $sort_query = "ORDER BY $sort_column $sort_order";
+    }
+
     // Retrieve entries for the current page
     $entries = $wpdb->get_results(
-        "SELECT * FROM $table_name LIMIT $offset, $entries_per_page"
+        $wpdb->prepare(
+            "SELECT * FROM $table_name $sort_query LIMIT %d, %d",
+            $offset, $entries_per_page
+        )
     );
+
+    
 
 echo '<form class="bc-form-entries-search" id="search-form" method="GET">';
 echo '<h2>Išsaugotos konfigūracijos</h2>';
 echo '<input type="hidden" name="post_type" value="boat_config">';
 echo '<input type="hidden" name="page" value="boat-configurator-entries">';
+echo '<input type="hidden" id="ajax-url" value="' . esc_url(admin_url('admin-ajax.php')) . '">';
+echo '<input type="hidden" id="nonce" value="' . wp_create_nonce('boat_config_nonce') . '">';
 echo '<input type="text" id="search-input" name="s" value="' . esc_attr($search_query) . '" placeholder="Ieškoti...">';
 
 // Date range inputs
@@ -47,7 +62,7 @@ echo '</form>';
 
 echo '<div id="entries-container">';
 // Output the initial table content here
-render_entries_table($entries);
+render_entries_table($entries, $sort_column, $sort_order);
 echo '</div>';
 
 
@@ -80,12 +95,25 @@ echo '</div>';
 
 }
 
-function render_entries_table($entries) {
+// Function to display sort icon based on current order
+function display_sort_icon($current_column, $current_order, $column) {
+    if ($current_column === $column) {
+        if ($current_order === 'asc') {
+            return '↑';
+        } elseif ($current_order === 'desc') {
+            return '↓';
+        }
+    }
+    return '↑↓';
+}
+
+function render_entries_table($entries, $sort_column, $sort_order) {
+    
     echo '<ul class="responsive-table" style="list-style-type: none; padding: 0;">';
     echo '<li class="table-header">';
-    echo '<div class="col col-1">Modelis</div>';
-    echo '<div class="col col-1">Laikas</div>';
-    echo '<div class="col col-2">Klientas</div>';
+    echo '<div class="col col-1">Modelis <span class="sort-column" data-column="post_id" data-order="' . ($sort_column == 'post_id' ? $sort_order : 'none') . '">' . display_sort_icon($sort_column, $sort_order, 'post_id') . '</span></div>';
+    echo '<div class="col col-1">Laikas <span class="sort-column" data-column="timestamp" data-order="' . ($sort_column == 'timestamp' ? $sort_order : 'none') . '">' . display_sort_icon($sort_column, $sort_order, 'timestamp') . '</span></div>';
+    echo '<div class="col col-2">Klientas <span class="sort-column" data-column="first_name" data-order="' . ($sort_column == 'first_name' ? $sort_order : 'none') . '">' . display_sort_icon($sort_column, $sort_order, 'first_name') . '</span></div>';
     echo '<div class="col col-3">Konfigūracija</div>';
     echo '<div class="col col-4">Kontaktai</div>';
     echo '</li>';
@@ -142,12 +170,15 @@ function render_entries_table($entries) {
 }
 
 function boat_configurator_search_entries() {
+    
     global $wpdb;
     $table_name = $wpdb->prefix . DB_TABLE; // Replace 'DB_TABLE' with your actual constant value
 
     $search_query = isset($_GET['s']) ? sanitize_text_field($_GET['s']) : '';
     $start_date = isset($_GET['start_date']) ? sanitize_text_field($_GET['start_date']) : '';
     $end_date = isset($_GET['end_date']) ? sanitize_text_field($_GET['end_date']) : '';
+    $sort_column = isset($_GET['sort_column']) ? sanitize_text_field($_GET['sort_column']) : '';
+    $sort_order = isset($_GET['sort_order']) ? sanitize_text_field($_GET['sort_order']) : 'none';
 
     // Prepare date range for SQL
     $date_query = '';
@@ -159,47 +190,34 @@ function boat_configurator_search_entries() {
         $date_query = $wpdb->prepare(" AND timestamp <= %s", $end_date);
     }
 
-    // Convert post title to post ID
-    $post_id = '';
+    // Prepare search part of the query
+    $search_query_sql = '';
+    $search_placeholders = [];
     if (!empty($search_query)) {
-        $post_id = $wpdb->get_var($wpdb->prepare(
-            "SELECT ID FROM $wpdb->posts WHERE post_title LIKE %s AND post_type = 'boat_config' LIMIT 1",
-            '%' . $wpdb->esc_like($search_query) . '%'
-        ));
+        $search_query_sql = " AND (first_name LIKE %s OR last_name LIKE %s OR email LIKE %s OR phone LIKE %s OR country LIKE %s OR city LIKE %s OR zip LIKE %s)";
+        $search_placeholders = array_fill(0, 7, '%' . $wpdb->esc_like($search_query) . '%');
     }
 
-    // Retrieve entries that match the search query and date range
-    $sql = "
-        SELECT * FROM $table_name
-        WHERE (first_name LIKE %s OR last_name LIKE %s OR email LIKE %s OR phone LIKE %s OR country LIKE %s OR city LIKE %s OR zip LIKE %s"
-        . ($post_id ? " OR post_id = %d" : "") . ")
-        $date_query
-    ";
-
-    $params = [
-        '%' . $wpdb->esc_like($search_query) . '%',
-        '%' . $wpdb->esc_like($search_query) . '%',
-        '%' . $wpdb->esc_like($search_query) . '%',
-        '%' . $wpdb->esc_like($search_query) . '%',
-        '%' . $wpdb->esc_like($search_query) . '%',
-        '%' . $wpdb->esc_like($search_query) . '%',
-        '%' . $wpdb->esc_like($search_query) . '%'
-    ];
-
-    if ($post_id) {
-        $params[] = $post_id;
+    // Prepare sorting part of the query
+    $sort_query = '';
+    if ($sort_column && in_array($sort_order, ['asc', 'desc'])) {
+        $sort_query = " ORDER BY $sort_column $sort_order";
     }
 
-    $entries = $wpdb->get_results($wpdb->prepare($sql, ...$params));
+    // Retrieve all entries that match the search query
+    $sql = "SELECT * FROM $table_name WHERE 1=1 $date_query $search_query_sql $sort_query";
+    $query_args = array_merge([$sql], $search_placeholders);
+    $prepared_sql = call_user_func_array([$wpdb, 'prepare'], $query_args);
+    $entries = $wpdb->get_results($prepared_sql);
 
     // Output the entries as HTML
     ob_start();
-    render_entries_table($entries);
+    render_entries_table($entries, $sort_column, $sort_order);
     $html = ob_get_clean();
 
     echo $html;
     wp_die();
 }
 add_action('wp_ajax_boat_configurator_search_entries', 'boat_configurator_search_entries');
-add_action('wp_ajax_nopriv_boat_configurator_search_entries', 'boat_configurator_search_entries');
+//add_action('wp_ajax_nopriv_boat_configurator_search_entries', 'boat_configurator_search_entries');
 

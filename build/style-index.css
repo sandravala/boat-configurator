@@ -5,23 +5,23 @@
  * General styles for the front-end component
  */
 .bc-frontend {
-  /* Add styles specific to the top-level component container if necessary */
+  /* Pagination footer that controls next and previous buttons */
+  /* HIDE RADIO */
+  /* IMAGE STYLES */
+  /* CHECKED STYLES */
 }
-
-.pagination-progress {
+.bc-frontend .pagination-progress {
   display: flex;
   align-items: center;
   margin: 0 0 20px;
 }
-
-.progress-label {
+.bc-frontend .progress-label {
   color: #777771;
   font-size: 12px;
   font-weight: 500;
   margin-right: 12px;
 }
-
-.progress-bar {
+.bc-frontend .progress-bar {
   height: 8px;
   overflow: hidden;
   flex: 1;
@@ -29,14 +29,12 @@
   border-radius: 8px;
   background-color: #E6E6E6;
 }
-
-.progress-bar span {
+.bc-frontend .progress-bar span {
   height: 8px;
   display: block;
   background-color: #05b3bc;
 }
-
-.question-container p {
+.bc-frontend .question-container p {
   margin-bottom: 1em;
   text-align: center;
   text-transform: uppercase;
@@ -46,15 +44,13 @@
   padding-left: 1em;
   padding-right: 1em;
 }
-
-.question-container.contact p {
+.bc-frontend .question-container.contact p {
   text-transform: none;
   font-weight: 300;
   padding: 1em 3em;
   text-align: justify;
 }
-
-div.question-container {
+.bc-frontend div.question-container {
   border-left: #E6E6E6 solid 0.2em;
   background-color: rgba(230, 230, 230, 0.31);
   padding-bottom: 2em;
@@ -63,28 +59,24 @@ div.question-container {
   min-height: 350px;
   align-content: center;
 }
-
-.options-container {
+.bc-frontend .options-container {
   display: flex;
   align-items: center;
   justify-content: center;
   flex-wrap: wrap;
   padding: 0 15%;
 }
-
-.options-container.contact {
+.bc-frontend .options-container.contact {
   padding: 0 2em;
 }
-
-.option-label {
+.bc-frontend .option-label {
   margin-bottom: 1em;
   margin-left: 0.5em;
   margin-right: 0.5em;
   cursor: pointer;
   min-width: calc((100% - 60px) / 3);
 }
-
-.card {
+.bc-frontend .card {
   flex: 1 1 auto;
   background: white;
   transition: 0.4s;
@@ -92,40 +84,33 @@ div.question-container {
   border-radius: 0.8rem;
   width: 100%;
 }
-
-.card .top-text {
+.bc-frontend .card .top-text {
   text-align: center;
   padding: 1em 1em 0 1em;
 }
-
-.card .img {
+.bc-frontend .card .img {
   width: calc(100% - 2em);
   padding: 0.5em 1em 1em 1em;
 }
-
-.card .img img {
+.bc-frontend .card .img img {
   height: 200px;
   width: 100%;
   -o-object-fit: cover;
      object-fit: cover;
   border-radius: 0.8rem;
 }
-
-.card .img div {
+.bc-frontend .card .img div {
   height: 200px;
   width: 100%;
   -o-object-fit: cover;
      object-fit: cover;
   border-radius: 0.8rem;
 }
-
-/* Pagination footer that controls next and previous buttons */
-.pagination-footer {
+.bc-frontend .pagination-footer {
   display: flex;
   justify-content: space-between;
 }
-
-button {
+.bc-frontend button {
   width: auto;
   min-width: 80px;
   max-width: unset;
@@ -148,36 +133,34 @@ button {
   font-family: inherit;
   font-weight: 400;
 }
-button.next {
+.bc-frontend button.next {
   background-color: #cc7c54;
   margin: 0;
 }
-button.next:disabled {
+.bc-frontend button.next:disabled {
   background-color: #e5bda9;
   display: none;
 }
-button.next:active {
+.bc-frontend button.next:active {
   background-color: #cc4806;
 }
-button.previous {
+.bc-frontend button.previous {
   background-color: #05b3bc;
 }
-button.previous:disabled {
+.bc-frontend button.previous:disabled {
   background-color: rgba(5, 179, 188, 0.2392156863);
   display: none;
 }
-button.previous:active {
+.bc-frontend button.previous:active {
   background-color: #04878e;
 }
-
-.pagination-footer.previous-disabled {
+.bc-frontend .pagination-footer.previous-disabled {
   justify-content: flex-end;
 }
-
-.input-bc-custom {
+.bc-frontend .input-bc-custom {
   position: relative;
 }
-.input-bc-custom__label {
+.bc-frontend .input-bc-custom__label {
   position: absolute;
   left: 1em;
   top: -0.8em;
@@ -191,11 +174,10 @@ button.previous:active {
   /* font-weight: bold; */
   /* line-height: 1.2; */
 }
-.input-bc-custom__label.question {
+.bc-frontend .input-bc-custom__label.question {
   background: white;
 }
-
-input.input-bc-custom__field {
+.bc-frontend input.input-bc-custom__field {
   box-sizing: border-box;
   display: block;
   width: 100%;
@@ -205,14 +187,13 @@ input.input-bc-custom__field {
   background: transparent;
   border-radius: 0.6em;
 }
-input.input-bc-custom__field:not(:-moz-placeholder-shown) + .input__label {
+.bc-frontend input.input-bc-custom__field:not(:-moz-placeholder-shown) + .input__label {
   color: black;
 }
-input.input-bc-custom__field:focus + .input__label, input.input-bc-custom__field:not(:placeholder-shown) + .input__label {
+.bc-frontend input.input-bc-custom__field:focus + .input__label, .bc-frontend input.input-bc-custom__field:not(:placeholder-shown) + .input__label {
   color: black;
 }
-
-select.input-bc-custom__field {
+.bc-frontend select.input-bc-custom__field {
   box-sizing: border-box;
   display: block;
   width: 100%;
@@ -222,65 +203,57 @@ select.input-bc-custom__field {
   background: transparent;
   border-radius: 0.6em;
 }
-select.input-bc-custom__field:not(:-moz-placeholder-shown) + .input__label {
+.bc-frontend select.input-bc-custom__field:not(:-moz-placeholder-shown) + .input__label {
   color: black;
 }
-select.input-bc-custom__field:focus + .input__label, select.input-bc-custom__field:not(:placeholder-shown) + .input__label {
+.bc-frontend select.input-bc-custom__field:focus + .input__label, .bc-frontend select.input-bc-custom__field:not(:placeholder-shown) + .input__label {
   color: black;
 }
-
-/* HIDE RADIO */
-[type=radio] {
+.bc-frontend [type=radio] {
   position: absolute;
   opacity: 0;
   width: 0;
   height: 0;
 }
-
-/* IMAGE STYLES */
-[type=radio] + img {
+.bc-frontend [type=radio] + img {
   cursor: pointer;
 }
-
-/* CHECKED STYLES */
-[type=radio]:checked + .card {
+.bc-frontend [type=radio]:checked + .card {
   outline: 2px solid #05b3bc;
 }
-
-.contact-row {
+.bc-frontend .contact-row {
   display: flex;
   flex-wrap: wrap;
   width: 100%;
   justify-content: center;
   margin-bottom: 1em;
 }
-
-.contact-row .col-5 {
+.bc-frontend .contact-row .col-5 {
   flex: 0 0 auto;
   width: calc(50% - 2em);
   padding: 0 0.5em;
 }
-
 @media screen and (max-width: 767px) {
-  .options-container {
+  .bc-frontend .options-container {
     flex-direction: column;
   }
-  .option-label {
+  .bc-frontend .option-label {
     min-width: calc(100% - 1em);
   }
-  .contact-row {
+  .bc-frontend .contact-row {
     flex-direction: column;
   }
-  .contact-row .col-5 {
+  .bc-frontend .contact-row .col-5 {
     width: calc(100% - 2em);
     padding: 0.5em 0.5em;
   }
 }
 @media screen and (max-width: 676px) {
-  .card {
+  .bc-frontend .card {
     /* Responsive styles for small screens */
   }
 }
+
 .loader {
   height: 30px;
   aspect-ratio: 6;

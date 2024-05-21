@@ -29,6 +29,10 @@
         letter-spacing: 0.03em;
         color: white;
         font-weight: bold;
+
+        span.sort-column {
+          cursor: pointer;
+        }
     }
     .table-row {
       background-color: #ffffff;

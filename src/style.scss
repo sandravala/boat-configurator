@@ -2,300 +2,301 @@
  * General styles for the front-end component
  */
  .bc-frontend {
-    /* Add styles specific to the top-level component container if necessary */
-}
-
-.pagination-progress {
-    display: flex;
-    align-items: center;
-    margin: 0 0 20px;
-}
-
-.progress-label {
-    color: #777771;
-    font-size: 12px;
-    font-weight: 500;
-    margin-right: 12px;
-}
-
-.progress-bar {
-    height: 8px;
-    overflow: hidden;
-    flex: 1;
-    position: relative;
-    border-radius: 8px;
-    background-color: #E6E6E6;
-}
-
-.progress-bar span {
-    height: 8px;
-    display: block;
-    background-color: #05b3bc;
-}
-
-.question-container p {
-		margin-bottom: 1em;
-		text-align: center;
-		text-transform: uppercase;
-		font-family: hind;
-		font-size: 16px;
+	
+    .pagination-progress {
+		display: flex;
+		align-items: center;
+		margin: 0 0 20px;
+	}
+	
+	.progress-label {
 		color: #777771;
-		padding-left: 1em;
-		padding-right: 1em;
-}
-
-.question-container.contact p {
-	text-transform: none;
-	font-weight: 300;
-	padding: 1em 3em;
-	text-align: justify;
-}
-
-div.question-container {
-    border-left: #E6E6E6 solid .2em;
-    background-color: rgb(230 230 230 / 31%);
-    padding-bottom: 2em;
-    padding-top: .1em;
-    margin-bottom: 1em;
-	min-height: 350px;
-	align-content: center;
-}
-
-.options-container {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-wrap: wrap;
-    padding: 0 15%;
-}
-
-.options-container.contact {
-	padding: 0 2em;
-}
-
-.option-label {
-	margin-bottom: 1em;
-	margin-left: .5em;
-	margin-right: .5em;
-	cursor: pointer;
-	min-width: calc((100% - 60px) / 3);
-}
-
-.card {
-    flex: 1 1 auto;
-    background: white;
-    transition: 0.4s;
-    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
-    border-radius: 0.8rem;
-    // height: 100px;
-    width: 100%;
-}
-
-.card .top-text {
-	text-align: center;
-    padding: 1em 1em 0 1em;
-}
-
-.card .img {
-	width: calc(100% - 2em);
-    padding: .5em 1em 1em 1em;
-}
-
-.card .img img {
-    height: 200px;
-	width: 100%;
-    object-fit: cover;
-    border-radius: 0.8rem;
-}
-
-.card .img div {
-    height: 200px;
-	width: 100%;
-    object-fit: cover;
-    border-radius: 0.8rem;
-}
-
-/* Pagination footer that controls next and previous buttons */
-.pagination-footer {
-    display: flex;
-    justify-content: space-between;
-}
-
-button {
-
-	width: auto;
-    min-width: 80px;
-    max-width: unset;
-    height: auto;
-    min-height: unset;
-    max-height: unset;
-    cursor: pointer;
-    display: inline-block;
-    position: relative;
-    margin: 0 10px 0 0;
-    padding: 8px;
-    border: 0;
-    border-radius: .4em;
-    background-image: unset;
-    text-align: center;
-    -webkit-transition: .2s ease;
-    transition: .2s ease;
-	text-transform: uppercase;
-	color: #FFFFFF;
-	font-size: 14px;
-	font-family: inherit;
-	font-weight: 400;
-
-	&.next {
-		background-color: #cc7c54;
-		margin: 0;
-		
-		&:disabled {
-			background-color: #e5bda9;
-			display: none;
-		}
-
-		&:active {
-			background-color: #cc4806;;
-		}
+		font-size: 12px;
+		font-weight: 500;
+		margin-right: 12px;
 	}
-
-	&.previous {
+	
+	.progress-bar {
+		height: 8px;
+		overflow: hidden;
+		flex: 1;
+		position: relative;
+		border-radius: 8px;
+		background-color: #E6E6E6;
+	}
+	
+	.progress-bar span {
+		height: 8px;
+		display: block;
 		background-color: #05b3bc;
-
-		&:disabled {
-			background-color: #05b3bc3d;
-			display: none;
-		}
-
-		&:active {
-			background-color: #04878e;
-			
-		}
 	}
-}
-
-.pagination-footer.previous-disabled {
-	justify-content: flex-end;
-}
-
-
-
-.input-bc-custom {
-	position: relative;
-
-
-&__label {
-		position: absolute;
-		left: 1em;
-		top: -.8em;
-		padding: 0 .5em;
-		font-size: small;
-		/* padding: calc(var(--size-bezel)* 0.75) calc(var(--size-bezel)* 0.5); */
-		/* margin: calc(var(--size-bezel)* 0.75 + 3px) calc(var(--size-bezel)* 0.5); */
-		background: #f3f3f3;
-		white-space: nowrap;
-		color: #b0afaf;
-		/* font-weight: bold; */
-		/* line-height: 1.2; */
+	
+	.question-container p {
+			margin-bottom: 1em;
+			text-align: center;
+			text-transform: uppercase;
+			font-family: hind;
+			font-size: 16px;
+			color: #777771;
+			padding-left: 1em;
+			padding-right: 1em;
 	}
-	&__label.question {
-		background: white;
+	
+	.question-container.contact p {
+		text-transform: none;
+		font-weight: 300;
+		padding: 1em 3em;
+		text-align: justify;
 	}
-}
-
-	input.input-bc-custom__field {
-		box-sizing: border-box;
-		display: block;
-		width: 100%;
-		border: 1px solid #b0afaf;
-		padding: 0.8em 1.4em;
-		color: black;
-		background: transparent;
-		border-radius: 0.6em;
-
-		&:focus,
-		&:not(:placeholder-shown) {
-			&+.input__label {
-				color: black;
-			}
-		}
+	
+	div.question-container {
+		border-left: #E6E6E6 solid .2em;
+		background-color: rgb(230 230 230 / 31%);
+		padding-bottom: 2em;
+		padding-top: .1em;
+		margin-bottom: 1em;
+		min-height: 350px;
+		align-content: center;
 	}
-
-	select.input-bc-custom__field {
-		box-sizing: border-box;
-		display: block;
-		width: 100%;
-		border: 1px solid #b0afaf;
-		padding: 0.8em 1.4em;
-		color: black;
-		background: transparent;
-		border-radius: 0.6em;
-
-		&:focus,
-		&:not(:placeholder-shown) {
-			&+.input__label {
-				color: black;
-			}
-		}
+	
+	.options-container {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		flex-wrap: wrap;
+		padding: 0 15%;
 	}
-
-/* HIDE RADIO */
-[type=radio] {
-	position: absolute;
-	opacity: 0;
-	width: 0;
-	height: 0;
-}
-
-/* IMAGE STYLES */
-[type=radio]+img {
-	cursor: pointer;
-}
-
-/* CHECKED STYLES */
-[type=radio]:checked+.card {
-	outline: 2px solid #05b3bc;
-}
-
-.contact-row {
-	display: flex;
-    flex-wrap: wrap;
-	width: 100%;
-	justify-content: center;
-	margin-bottom: 1em;
-}
-
-.contact-row .col-5 {
-	flex: 0 0 auto;
-    width: calc(50% - 2em);
-    padding: 0 0.5em;
-}
-
-@media screen and (max-width: 767px) {
-    .options-container {
-        flex-direction: column;
-    }
-
+	
+	.options-container.contact {
+		padding: 0 2em;
+	}
+	
 	.option-label {
-		min-width: calc(100% - 1em);
+		margin-bottom: 1em;
+		margin-left: .5em;
+		margin-right: .5em;
+		cursor: pointer;
+		min-width: calc((100% - 60px) / 3);
 	}
-
-	.contact-row {
-		flex-direction: column;
+	
+	.card {
+		flex: 1 1 auto;
+		background: white;
+		transition: 0.4s;
+		box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+		border-radius: 0.8rem;
+		// height: 100px;
+		width: 100%;
 	}
-
-	.contact-row .col-5 {
+	
+	.card .top-text {
+		text-align: center;
+		padding: 1em 1em 0 1em;
+	}
+	
+	.card .img {
 		width: calc(100% - 2em);
-		padding: .5em 0.5em;
+		padding: .5em 1em 1em 1em;
+	}
+	
+	.card .img img {
+		height: 200px;
+		width: 100%;
+		object-fit: cover;
+		border-radius: 0.8rem;
+	}
+	
+	.card .img div {
+		height: 200px;
+		width: 100%;
+		object-fit: cover;
+		border-radius: 0.8rem;
+	}
+	
+	/* Pagination footer that controls next and previous buttons */
+	.pagination-footer {
+		display: flex;
+		justify-content: space-between;
+	}
+	
+	button {
+	
+		width: auto;
+		min-width: 80px;
+		max-width: unset;
+		height: auto;
+		min-height: unset;
+		max-height: unset;
+		cursor: pointer;
+		display: inline-block;
+		position: relative;
+		margin: 0 10px 0 0;
+		padding: 8px;
+		border: 0;
+		border-radius: .4em;
+		background-image: unset;
+		text-align: center;
+		-webkit-transition: .2s ease;
+		transition: .2s ease;
+		text-transform: uppercase;
+		color: #FFFFFF;
+		font-size: 14px;
+		font-family: inherit;
+		font-weight: 400;
+	
+		&.next {
+			background-color: #cc7c54;
+			margin: 0;
+			
+			&:disabled {
+				background-color: #e5bda9;
+				display: none;
+			}
+	
+			&:active {
+				background-color: #cc4806;;
+			}
+		}
+	
+		&.previous {
+			background-color: #05b3bc;
+	
+			&:disabled {
+				background-color: #05b3bc3d;
+				display: none;
+			}
+	
+			&:active {
+				background-color: #04878e;
+				
+			}
+		}
+	}
+	
+	.pagination-footer.previous-disabled {
+		justify-content: flex-end;
+	}
+	
+	
+	
+	.input-bc-custom {
+		position: relative;
+	
+	
+	&__label {
+			position: absolute;
+			left: 1em;
+			top: -.8em;
+			padding: 0 .5em;
+			font-size: small;
+			/* padding: calc(var(--size-bezel)* 0.75) calc(var(--size-bezel)* 0.5); */
+			/* margin: calc(var(--size-bezel)* 0.75 + 3px) calc(var(--size-bezel)* 0.5); */
+			background: #f3f3f3;
+			white-space: nowrap;
+			color: #b0afaf;
+			/* font-weight: bold; */
+			/* line-height: 1.2; */
+		}
+		&__label.question {
+			background: white;
+		}
+	}
+	
+		input.input-bc-custom__field {
+			box-sizing: border-box;
+			display: block;
+			width: 100%;
+			border: 1px solid #b0afaf;
+			padding: 0.8em 1.4em;
+			color: black;
+			background: transparent;
+			border-radius: 0.6em;
+	
+			&:focus,
+			&:not(:placeholder-shown) {
+				&+.input__label {
+					color: black;
+				}
+			}
+		}
+	
+		select.input-bc-custom__field {
+			box-sizing: border-box;
+			display: block;
+			width: 100%;
+			border: 1px solid #b0afaf;
+			padding: 0.8em 1.4em;
+			color: black;
+			background: transparent;
+			border-radius: 0.6em;
+	
+			&:focus,
+			&:not(:placeholder-shown) {
+				&+.input__label {
+					color: black;
+				}
+			}
+		}
+	
+	/* HIDE RADIO */
+	[type=radio] {
+		position: absolute;
+		opacity: 0;
+		width: 0;
+		height: 0;
+	}
+	
+	/* IMAGE STYLES */
+	[type=radio]+img {
+		cursor: pointer;
+	}
+	
+	/* CHECKED STYLES */
+	[type=radio]:checked+.card {
+		outline: 2px solid #05b3bc;
+	}
+	
+	.contact-row {
+		display: flex;
+		flex-wrap: wrap;
+		width: 100%;
+		justify-content: center;
+		margin-bottom: 1em;
+	}
+	
+	.contact-row .col-5 {
+		flex: 0 0 auto;
+		width: calc(50% - 2em);
+		padding: 0 0.5em;
+	}
+	
+	@media screen and (max-width: 767px) {
+		.options-container {
+			flex-direction: column;
+		}
+	
+		.option-label {
+			min-width: calc(100% - 1em);
+		}
+	
+		.contact-row {
+			flex-direction: column;
+		}
+	
+		.contact-row .col-5 {
+			width: calc(100% - 2em);
+			padding: .5em 0.5em;
+		}
+	}
+	
+	@media screen and (max-width: 676px) {
+		.card {
+			/* Responsive styles for small screens */
+		}
 	}
 }
 
-@media screen and (max-width: 676px) {
-    .card {
-        /* Responsive styles for small screens */
-    }
-}
+
 
 .loader {
     height: 30px;
