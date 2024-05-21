@@ -56,19 +56,30 @@ function linkCopiedAlert() {
 }
 
 jQuery(document).ready(function($) {
-    $('#search-input').on('keyup', function() {
-        var searchQuery = $(this).val();
+    function fetchEntries() {
+        var data = {
+            action: 'boat_configurator_search_entries',
+            s: $('#search-input').val(),
+            start_date: $('#start_date').val(),
+            end_date: $('#end_date').val(),
+        };
 
         $.ajax({
-            url: ajaxurl,
-            type: 'GET',
-            data: {
-                action: 'boat_configurator_search_entries',
-                s: searchQuery
-            },
+            url: ajaxurl, // Use the correct URL for AJAX requests
+            method: 'GET',
+            data: data,
             success: function(response) {
                 $('#entries-container').html(response);
             }
         });
+    }
+
+    $('#search-input, #start_date, #end_date').on('input change', function() {
+        fetchEntries();
+    });
+
+    $('#search-form').on('submit', function(e) {
+        e.preventDefault();
+        fetchEntries();
     });
 });

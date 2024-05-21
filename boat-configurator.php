@@ -41,6 +41,7 @@ function boat_configurator_create_table()
     $sql = "CREATE TABLE $table_name (
 		id mediumint(9) NOT NULL AUTO_INCREMENT,
 		post_id varchar(255) NOT NULL,
+        post_title varchar(255) NOT NULL,
 		first_name VARCHAR(255) NOT NULL,
         last_name VARCHAR(255) NOT NULL,
         email VARCHAR(255) NOT NULL,
@@ -244,8 +245,6 @@ function update_post_title_and_thumbnail($post_id, $post, $update) {
         }
     }
 }
-
-
 
 function set_post_thumbnail_from_url($post_id, $image_url) {
     // Download image to media library

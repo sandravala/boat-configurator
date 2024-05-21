@@ -65,7 +65,7 @@
       flex-basis: 10%;
     }
     .col-2 {
-      flex-basis: 25%;
+      flex-basis: 15%;
     }
     .col-3 {
       flex-basis: 40%;
@@ -163,5 +163,28 @@
 
   form.bc-form-entries-search {
     padding-left: .2em;
+    text-align: center;
+    align-content: center;
+
+    label.date-range {
+      margin: .8em;
+    }
   }
+
+  .bc-settings-ml-form {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1em;
+}
+
+.bc-settings-ml-form label {
+    width: 15%; /* Set a fixed width for labels */
+    margin-right: 1em;
+}
+
+.bc-settings-ml-form input {
+    flex: .8; /* Allow the input to take the remaining space */
+    padding: 0.5em;
+    box-sizing: border-box;
+}
   

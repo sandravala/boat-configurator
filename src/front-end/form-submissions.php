@@ -79,9 +79,11 @@ function handle_form_submission()
     }
 
     $sanitizedPostId = absint( $form_data['postId'] );
+    $sanitizedPostTitle = sanitize_title( get_the_title($sanitizedPostId) );
+    $sanitizedSubscribe = (bool) ($form_data['subscribe']);
 
     // Extract email and other fields
-    $email = isset($sanitizedContactInfo['email']) ? sanitize_email($sanitizedContactInfo['email']) : '';
+    $email = isset($sanitizedContactInfo['email']) ? $sanitizedContactInfo['email'] : '';
 
     if (empty($email)) {
         error_log('Email is empty');
@@ -89,8 +91,12 @@ function handle_form_submission()
         return;
     }
 
+    if ($sanitizedSubscribe) {
+        subscribeToMailerlite ( $sanitizedContactInfo );
+    }
+
     // Save to database
-    saveBoatConfigToDB( $sanitizedQuestionAnswers, $sanitizedContactInfo, $sanitizedPostId );
+    saveBoatConfigToDB( $sanitizedQuestionAnswers, $sanitizedContactInfo, $sanitizedPostId, $sanitizedPostTitle );
 
     // Send email to admin
     $admin_email = get_option('admin_email');
@@ -103,61 +109,14 @@ function handle_form_submission()
         return;
     }
 
-    $data_encryption = new BC_Data_Encryption();
-    $api_key = get_option('our_api_key');
 
-    if ($api_key) {
-        $api_key = $data_encryption->decrypt(get_option('our_api_key'));
-    }
-    
-    // Correct variable name used here
-    error_log($api_key);
-    
-    $mailerLite = new MailerLite(['api_key' => $api_key]);
-    
-    $data = [
-        'email' => 'anothersubscriber@example.com',
-        "fields" => [
-            "name" => "Dummy",
-            "last_name" => "Testerson",
-            "city" => null,
-      "country" => null,
-      "phone" => null,
-      "state" => null,
-      "z_i_p" => null
-        ],
-        "groups"=> [
-            "121874853504485179",
-        ]
-    ];
-    
-    $response = $mailerLite->subscribers->create($data);
-    error_log(print_r($response, true));
-
-    error_log('before wp_send_json_success');
     wp_send_json_success(array(
         'text' => 'all great',
     ), 200);
 
-    // if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-
-    //     $email = $_POST['input_0']; // Assuming 'email' is the name attribute of your email input field
-
-    //     saveBoatConfigToDB();
-
-    //     //Send email to admin
-    //     $admin_email = get_option('admin_email');
-    //     $subject = 'New form submission';
-    //     $message = 'A new form submission has been received.';
-
-    //     wp_mail($admin_email, $subject, $message);
-
-
-
 }
 
-function saveBoatConfigToDB( $sanitizedQuestionAnswers, $sanitizedContactInfo, $sanitizedPostId )
-{
+function saveBoatConfigToDB( $sanitizedQuestionAnswers, $sanitizedContactInfo, $sanitizedPostId, $sanitizedPostTitle ) {
 
     global $wpdb;
     // Insert form data into the database table
@@ -166,6 +125,7 @@ function saveBoatConfigToDB( $sanitizedQuestionAnswers, $sanitizedContactInfo, $
         $table_name,
         array(
             'post_id' => $sanitizedPostId,
+            'post_title' => $sanitizedPostTitle,
             'answers' =>maybe_serialize($sanitizedQuestionAnswers),
             'first_name' => $sanitizedContactInfo['firstName'],
             'last_name' => $sanitizedContactInfo['lastName'],
@@ -178,6 +138,7 @@ function saveBoatConfigToDB( $sanitizedQuestionAnswers, $sanitizedContactInfo, $
         ),
         array(
             '%d',
+            '%s',
             '%s', 
             '%s', 
             '%s',
@@ -189,4 +150,43 @@ function saveBoatConfigToDB( $sanitizedQuestionAnswers, $sanitizedContactInfo, $
         )
     );
     // Handle any additional actions after data insertion, such as sending emails, etc.
+}
+
+function subscribeToMailerlite ( $sanitizedContactInfo ) {
+
+    $data_encryption = new BC_Data_Encryption();
+    $api_key = get_option('bc_ml_api_key');
+    $group_id = get_option('bc_ml_group_id');
+
+    if ($api_key) {
+        $api_key = $data_encryption->decrypt(get_option('bc_ml_api_key'));
+    }
+
+    if ($group_id) {
+        $group_id = $data_encryption->decrypt(get_option('bc_ml_group_id'));
+    }
+    
+    
+    $mailerLite = new MailerLite(['api_key' => $api_key]);
+    
+    $data = [
+        'email' => $sanitizedContactInfo['email'],
+        "fields" => [
+            "name" => isset($sanitizedContactInfo['firstName']) ? $sanitizedContactInfo['firstName'] : null,
+            "last_name" => isset($sanitizedContactInfo['lastName']) ? $sanitizedContactInfo['lastName'] : null,
+            "city" => isset($sanitizedContactInfo['city']) ? $sanitizedContactInfo['city'] : null,
+            "country" => isset($sanitizedContactInfo['country']) ? $sanitizedContactInfo['country'] : null,
+            "phone" => isset($sanitizedContactInfo['phone']) ? $sanitizedContactInfo['phone'] : null,
+            "state" => isset($sanitizedContactInfo['state']) ? $sanitizedContactInfo['state'] : null,
+            "z_i_p" => isset($sanitizedContactInfo['zip']) ? $sanitizedContactInfo['zip'] : null
+        ],
+        "groups"=> [
+            $group_id ? $group_id : null,
+        ]
+    ];
+
+   
+    $response = $mailerLite->subscribers->create($data);
+    error_log(print_r($response, true));
+
 }
