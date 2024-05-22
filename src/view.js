@@ -8,7 +8,6 @@ document.addEventListener('DOMContentLoaded', function () {
     renderForm(bcDataFront);
     document.getElementById('create-block-boat-configurator-script-js-before').remove();
 
-
 });
 
 
@@ -30,113 +29,7 @@ function BoatConfig(questionsData) {
     const [formSubmitting, setFormSubitting] = useState(false);
     const [formSubmitMessage, setFormSubmitMessage] = useState('');
     const [formSubmitSuccess, setFormSubmitSuccess] = useState(false);
-
-
-
-    useEffect(() => {
-        if(currentIndex <= questionsData.questions.length - 1) {
-            setQuestion(questionsData.questions[currentIndex]);
-        }
-        
-        setProgress(((currentIndex) / (questionsData.questions.length)) * 100);
-    }, [currentIndex]);
-
-    const handlePrevClick = () => {
-        if (currentIndex > 0) {
-            setCurrentIndex(currentIndex - 1);
-        }
-    };
-
-    const handleNextClick = () => {
-
-        if (currentIndex <= questionsData.questions.length - 1) {
-            setCurrentIndex(currentIndex + 1);
-        }
-    };
-
-    const updateAnswers = (questionIdentifier, value) => {
-        let answer = value.length ? { ...value } : value;
-
-        setAnswers(prev => ({
-            ...prev,
-            [questionIdentifier]: answer
-        }));
-
-    };
-
-    const handleSubmit = (e) => {
-        e.preventDefault();
-
-        // Extract contact information dynamically
-        const contactInfo = {};
-        contactFormFields.forEach((field) => {
-            contactInfo[field.id] = answers[field.id];
-        });
-
-        // Extract answers to questions
-        const questionAnswers = {};
-        questionsData.questions.forEach((question, index) => {
-            const questionText = question.text;
-            const selectedOption = answers[questionText];
-            questionAnswers[questionText] = selectedOption;
-        });
-
-        // Prepare data to be sent to the backend
-        const formData = {
-            contactInfo: contactInfo,
-            questionAnswers: questionAnswers,
-            postId: questionsData.postId,
-            subscribe: answers.subscribe
-        };
-        console.log(formData);
-        // var formData = jQuery('#bc-form').serialize();
-        setFormSubitting(true);
-
-        jQuery.ajax({
-            url: questionsData.ajaxUrl,
-            type: 'POST',
-            data: {
-                action: 'handle_form_submission',
-                security: questionsData.feNonce, // Include nonce in the data payload
-                form_data: formData,
-            },
-            success: function (response) {
-                if (response.success) {
-                    console.log('success: ', response.data.text);
-                    setFormSubmitMessage('Data submitted successfully!');
-                    setFormSubmitSuccess(true);
-                } else {
-                    console.log('Error:', response);
-                    setFormSubmitMessage('Ooops! Something went wrong... please try again!');
-                }
-            },
-            error: function (xhr, status, error) {
-                console.log('AJAX error:', xhr.responseText);
-                setFormSubmitMessage('Ooops! Something went wrong... please try again!');
-            }
-        });
-
-
-
-        // const emailInput = document.getElementById('email').value;
-        // const errorMessage = document.getElementById('email-error');
-
-        // if (!validateEmail(emailInput)) {
-        //     // Create error message span if it doesn't exist
-        //     if (!errorMessage) {
-        //         const errorSpan = document.createElement('span');
-        //         errorSpan.id = 'email-error';
-        //         errorSpan.textContent = 'Please enter a valid email address.';
-        //         errorSpan.style.color = 'red';
-        //         document.getElementById('email').insertAdjacentElement('afterend', errorSpan);
-        //     } else {
-        //         errorMessage.textContent = 'Please enter a valid email address.';
-        //         errorMessage.style.display = 'block';
-        //     }
-        //     return;
-        // }
-
-    }
+    const [errors, setErrors] = useState({});
 
     const countryOptions = [
         { value: "US", text: "United States" },
@@ -346,6 +239,115 @@ function BoatConfig(questionsData) {
         { type: 'text', id: 'zip', label: 'Zip Code*', required: { required: true } }
     ]
 
+
+    useEffect(() => {
+        if (currentIndex <= questionsData.questions.length - 1) {
+            setQuestion(questionsData.questions[currentIndex]);
+        }
+
+        setProgress(((currentIndex) / (questionsData.questions.length)) * 100);
+    }, [currentIndex]);
+
+    const handlePrevClick = () => {
+        if (currentIndex > 0) {
+            setCurrentIndex(currentIndex - 1);
+        }
+    };
+
+    const handleNextClick = () => {
+
+        if (currentIndex <= questionsData.questions.length - 1) {
+            setCurrentIndex(currentIndex + 1);
+        }
+    };
+
+    const updateAnswers = (questionIdentifier, value) => {
+        let answer = value.length ? { ...value } : value;
+
+        setErrors({
+            ...errors,
+            [questionIdentifier]: '',
+          });
+
+        setAnswers(prev => ({
+            ...prev,
+            [questionIdentifier]: answer
+        }));
+
+    };
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+
+        const newErrors = {};
+
+        // Check empty fields
+        contactFormFields.forEach((field) => {
+            if (field.required.required && document.getElementById(field.id).value.trim() === '') {
+            newErrors[field.id] = 'Field should not be empty';
+            document.getElementById(field.id).style.border = '1px solid red';
+            } else if (field.id === "email" && !validateEmail(document.getElementById(field.id).value)) {
+                    newErrors.email = 'Please enter a valid email address.';
+            }
+        });
+
+        setErrors(newErrors);
+
+        if (Object.keys(newErrors).length > 0) {
+            return;
+        }
+
+        // Extract contact information dynamically
+        const contactInfo = {};
+        contactFormFields.forEach((field) => {
+            contactInfo[field.id] = answers[field.id];
+        });
+
+        // Extract answers to questions
+        const questionAnswers = {};
+        questionsData.questions.forEach((question, index) => {
+            const questionText = question.text;
+            const selectedOption = answers[questionText];
+            questionAnswers[questionText] = selectedOption;
+        });
+
+        // Prepare data to be sent to the backend
+        const formData = {
+            contactInfo: contactInfo,
+            questionAnswers: questionAnswers,
+            postId: questionsData.postId,
+            subscribe: answers.subscribe
+        };
+
+        setFormSubitting(true);
+
+        jQuery.ajax({
+            url: questionsData.ajaxUrl,
+            type: 'POST',
+            data: {
+                action: 'handle_form_submission',
+                security: questionsData.feNonce, // Include nonce in the data payload
+                form_data: formData,
+            },
+            success: function (response) {
+                if (response.success) {
+                    console.log('success: ', response.data.text);
+                    setFormSubmitMessage('Data submitted successfully!');
+                    setFormSubmitSuccess(true);
+                } else {
+                    console.log('Error:', response);
+                    setFormSubmitMessage('Ooops! Something went wrong... please try again!');
+                }
+            },
+            error: function (xhr, status, error) {
+                console.log('AJAX error:', xhr.responseText);
+                setFormSubmitMessage('Ooops! Something went wrong... please try again!');
+            }
+        });
+    }
+
+
+
     return (
         <>
             {
@@ -404,10 +406,10 @@ function BoatConfig(questionsData) {
                                                                 class="input-bc-custom__field"
                                                                 type={field.type}
                                                                 placeholder=" "
-                                                                style={{ fontSize: "20px" }}
+                                                                style={{ fontSize: "20px", borderColor: errors[field.id] ? 'red' : ''  }}
                                                                 id={field.id}
                                                                 name={field.id}
-                                                                value={answers[field.id]  ? answers[field.id][0] : ''}
+                                                                value={answers[field.id] ? answers[field.id][0] : ''}
                                                                 onChange={(e) => updateAnswers(field.id, [e.target.value, field.type])}
                                                                 {...field.required}
                                                             />
@@ -416,7 +418,7 @@ function BoatConfig(questionsData) {
                                                                 class="input-bc-custom__field"
                                                                 type={field.type}
                                                                 placeholder=" "
-                                                                style={{ fontSize: "20px" }}
+                                                                style={{ fontSize: "20px", borderColor: errors[field.id] ? 'red' : '' }}
                                                                 id={field.id}
                                                                 name={field.id}
                                                                 value={answers[field.id] ? answers[field.id][0] : ''}
@@ -431,9 +433,11 @@ function BoatConfig(questionsData) {
 
                                                         <span class="input-bc-custom__label">{field.label}</span>
                                                     </label>
+                                                    {errors[field.id] && <span style={{ color: 'red' }}>{errors[field.id]}</span>}
                                                 </div>
                                             </div>
                                         ))}
+
 
                                         {[{ id: 'subscribe', text: 'Embrace the future of boating by subscribing to receive updates from Hendrixon. Be the first to learn about new product launches, exclusive events, and more. By selecting "I agree," you authorize Hendrixon and our trusted partners to utilize your personal information for marketing and promotional activities. Set sail on a journey of innovation and luxury with us—where every update brings you closer to the voyage of your dreams.' },
                                         { id: 'agreePolicies', text: 'By clicking this box, I acknowledge and accept the ' }].map((checkbox, chId) => (
@@ -450,18 +454,26 @@ function BoatConfig(questionsData) {
                                                             onClick={(e) => updateAnswers(checkbox.id, e.target.checked)}
                                                             defaultChecked="true"
                                                         />
-                                                        <p style={{ margin: '3px 0 0 0', padding: '0 0 0 1em', fontSize: '10px', textAlign: justify }}>
+                                                        <p style={{ margin: '3px 0 0 0', padding: '0 0 0 1em', fontSize: '10px', textAlign: 'justify' }}>
                                                             {checkbox.id === 'subscribe' ? checkbox.text : (
                                                                 <>
                                                                     {checkbox.text}
                                                                     <a href={privacyPolicyUrl} target="_blank" rel="noopener noreferrer" title="This link opens in new tab">Policies &amp; Terms</a>
                                                                 </>
                                                             )}
-                                                        </p>
+                                                        </p>    
                                                     </label>
                                                 </div>
                                             </div>
                                         ))}
+
+                                        {!answers.agreePolicies && 
+                                        <div className='contact-row'>
+                                            <div class="col-5">
+                                                <span style={{ color: 'red', fontSize: '10px', paddingLeft: '28px' }}>You have to agree to Terms and Policies to proceed</span>
+                                            </div>
+                                        </div>                                        
+                                        }
 
                                     </>
 

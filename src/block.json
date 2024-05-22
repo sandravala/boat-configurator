@@ -16,7 +16,6 @@
 	"editorStyle": "file:./index.css",
 	"style": "file:./style-index.css",
 	"viewScript": "file:./view.js", 
-	"script": ["file:./front-end/multistep-form.js", "boat-config-view-form-script" ],
 	"attributes": {
 		"model": {
 			"type": "string"

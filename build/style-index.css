@@ -110,50 +110,6 @@
   display: flex;
   justify-content: space-between;
 }
-.bc-frontend button {
-  width: auto;
-  min-width: 80px;
-  max-width: unset;
-  height: auto;
-  min-height: unset;
-  max-height: unset;
-  cursor: pointer;
-  display: inline-block;
-  position: relative;
-  margin: 0 10px 0 0;
-  padding: 8px;
-  border: 0;
-  border-radius: 0.4em;
-  background-image: unset;
-  text-align: center;
-  transition: 0.2s ease;
-  text-transform: uppercase;
-  color: #FFFFFF;
-  font-size: 14px;
-  font-family: inherit;
-  font-weight: 400;
-}
-.bc-frontend button.next {
-  background-color: #cc7c54;
-  margin: 0;
-}
-.bc-frontend button.next:disabled {
-  background-color: #e5bda9;
-  display: none;
-}
-.bc-frontend button.next:active {
-  background-color: #cc4806;
-}
-.bc-frontend button.previous {
-  background-color: #05b3bc;
-}
-.bc-frontend button.previous:disabled {
-  background-color: rgba(5, 179, 188, 0.2392156863);
-  display: none;
-}
-.bc-frontend button.previous:active {
-  background-color: #04878e;
-}
 .bc-frontend .pagination-footer.previous-disabled {
   justify-content: flex-end;
 }
@@ -230,7 +186,7 @@
 }
 .bc-frontend .contact-row .col-5 {
   flex: 0 0 auto;
-  width: calc(50% - 2em);
+  width: calc(70% - 2em);
   padding: 0 0.5em;
 }
 @media screen and (max-width: 767px) {
@@ -252,6 +208,51 @@
   .bc-frontend .card {
     /* Responsive styles for small screens */
   }
+}
+
+.bc-frontend button, .form-submit-message button {
+  width: auto;
+  min-width: 80px;
+  max-width: unset;
+  height: auto;
+  min-height: unset;
+  max-height: unset;
+  cursor: pointer;
+  display: inline-block;
+  position: relative;
+  margin: 0 10px 0 0;
+  padding: 8px;
+  border: 0;
+  border-radius: 0.4em;
+  background-image: unset;
+  text-align: center;
+  transition: 0.2s ease;
+  text-transform: uppercase;
+  color: #FFFFFF;
+  font-size: 14px;
+  font-family: inherit;
+  font-weight: 400;
+}
+.bc-frontend button.next, .form-submit-message button.next {
+  background-color: #cc7c54;
+  margin: 0;
+}
+.bc-frontend button.next:disabled, .form-submit-message button.next:disabled {
+  background-color: #e5bda9;
+  display: none;
+}
+.bc-frontend button.next:active, .form-submit-message button.next:active {
+  background-color: #cc4806;
+}
+.bc-frontend button.previous, .form-submit-message button.previous {
+  background-color: #05b3bc;
+}
+.bc-frontend button.previous:disabled, .form-submit-message button.previous:disabled {
+  background-color: rgba(5, 179, 188, 0.2392156863);
+  display: none;
+}
+.bc-frontend button.previous:active, .form-submit-message button.previous:active {
+  background-color: #04878e;
 }
 
 .loader {

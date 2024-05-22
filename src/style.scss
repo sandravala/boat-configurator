@@ -119,60 +119,6 @@
 		justify-content: space-between;
 	}
 	
-	button {
-	
-		width: auto;
-		min-width: 80px;
-		max-width: unset;
-		height: auto;
-		min-height: unset;
-		max-height: unset;
-		cursor: pointer;
-		display: inline-block;
-		position: relative;
-		margin: 0 10px 0 0;
-		padding: 8px;
-		border: 0;
-		border-radius: .4em;
-		background-image: unset;
-		text-align: center;
-		-webkit-transition: .2s ease;
-		transition: .2s ease;
-		text-transform: uppercase;
-		color: #FFFFFF;
-		font-size: 14px;
-		font-family: inherit;
-		font-weight: 400;
-	
-		&.next {
-			background-color: #cc7c54;
-			margin: 0;
-			
-			&:disabled {
-				background-color: #e5bda9;
-				display: none;
-			}
-	
-			&:active {
-				background-color: #cc4806;;
-			}
-		}
-	
-		&.previous {
-			background-color: #05b3bc;
-	
-			&:disabled {
-				background-color: #05b3bc3d;
-				display: none;
-			}
-	
-			&:active {
-				background-color: #04878e;
-				
-			}
-		}
-	}
-	
 	.pagination-footer.previous-disabled {
 		justify-content: flex-end;
 	}
@@ -266,7 +212,7 @@
 	
 	.contact-row .col-5 {
 		flex: 0 0 auto;
-		width: calc(50% - 2em);
+		width: calc(70% - 2em);
 		padding: 0 0.5em;
 	}
 	
@@ -296,6 +242,59 @@
 	}
 }
 
+.bc-frontend button, .form-submit-message button {
+	
+	width: auto;
+	min-width: 80px;
+	max-width: unset;
+	height: auto;
+	min-height: unset;
+	max-height: unset;
+	cursor: pointer;
+	display: inline-block;
+	position: relative;
+	margin: 0 10px 0 0;
+	padding: 8px;
+	border: 0;
+	border-radius: .4em;
+	background-image: unset;
+	text-align: center;
+	-webkit-transition: .2s ease;
+	transition: .2s ease;
+	text-transform: uppercase;
+	color: #FFFFFF;
+	font-size: 14px;
+	font-family: inherit;
+	font-weight: 400;
+
+	&.next {
+		background-color: #cc7c54;
+		margin: 0;
+		
+		&:disabled {
+			background-color: #e5bda9;
+			display: none;
+		}
+
+		&:active {
+			background-color: #cc4806;;
+		}
+	}
+
+	&.previous {
+		background-color: #05b3bc;
+
+		&:disabled {
+			background-color: #05b3bc3d;
+			display: none;
+		}
+
+		&:active {
+			background-color: #04878e;
+			
+		}
+	}
+}
 
 
 .loader {

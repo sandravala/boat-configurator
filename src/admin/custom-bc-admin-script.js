@@ -67,7 +67,7 @@ jQuery(document).ready(function($) {
             end_date: $('#end_date').val(),
             sort_column: $('#entries-container').data('sort-column'),
             sort_order: $('#entries-container').data('sort-order'),
-            _ajax_nonce: $('#nonce').val() // Get nonce value
+            _ajax_nonce: $('#boat_config_entries_list_nonce').val() // Get nonce value
         };
 
 

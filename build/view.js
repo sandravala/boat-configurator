@@ -127,101 +127,7 @@ function BoatConfig(questionsData) {
   const [formSubmitting, setFormSubitting] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false);
   const [formSubmitMessage, setFormSubmitMessage] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)('');
   const [formSubmitSuccess, setFormSubmitSuccess] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false);
-  (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
-    if (currentIndex <= questionsData.questions.length - 1) {
-      setQuestion(questionsData.questions[currentIndex]);
-    }
-    setProgress(currentIndex / questionsData.questions.length * 100);
-  }, [currentIndex]);
-  const handlePrevClick = () => {
-    if (currentIndex > 0) {
-      setCurrentIndex(currentIndex - 1);
-    }
-  };
-  const handleNextClick = () => {
-    if (currentIndex <= questionsData.questions.length - 1) {
-      setCurrentIndex(currentIndex + 1);
-    }
-  };
-  const updateAnswers = (questionIdentifier, value) => {
-    let answer = value.length ? {
-      ...value
-    } : value;
-    setAnswers(prev => ({
-      ...prev,
-      [questionIdentifier]: answer
-    }));
-  };
-  const handleSubmit = e => {
-    e.preventDefault();
-
-    // Extract contact information dynamically
-    const contactInfo = {};
-    contactFormFields.forEach(field => {
-      contactInfo[field.id] = answers[field.id];
-    });
-
-    // Extract answers to questions
-    const questionAnswers = {};
-    questionsData.questions.forEach((question, index) => {
-      const questionText = question.text;
-      const selectedOption = answers[questionText];
-      questionAnswers[questionText] = selectedOption;
-    });
-
-    // Prepare data to be sent to the backend
-    const formData = {
-      contactInfo: contactInfo,
-      questionAnswers: questionAnswers,
-      postId: questionsData.postId,
-      subscribe: answers.subscribe
-    };
-    console.log(formData);
-    // var formData = jQuery('#bc-form').serialize();
-    setFormSubitting(true);
-    jQuery.ajax({
-      url: questionsData.ajaxUrl,
-      type: 'POST',
-      data: {
-        action: 'handle_form_submission',
-        security: questionsData.feNonce,
-        // Include nonce in the data payload
-        form_data: formData
-      },
-      success: function (response) {
-        if (response.success) {
-          console.log('success: ', response.data.text);
-          setFormSubmitMessage('Data submitted successfully!');
-          setFormSubmitSuccess(true);
-        } else {
-          console.log('Error:', response);
-          setFormSubmitMessage('Ooops! Something went wrong... please try again!');
-        }
-      },
-      error: function (xhr, status, error) {
-        console.log('AJAX error:', xhr.responseText);
-        setFormSubmitMessage('Ooops! Something went wrong... please try again!');
-      }
-    });
-
-    // const emailInput = document.getElementById('email').value;
-    // const errorMessage = document.getElementById('email-error');
-
-    // if (!validateEmail(emailInput)) {
-    //     // Create error message span if it doesn't exist
-    //     if (!errorMessage) {
-    //         const errorSpan = document.createElement('span');
-    //         errorSpan.id = 'email-error';
-    //         errorSpan.textContent = 'Please enter a valid email address.';
-    //         errorSpan.style.color = 'red';
-    //         document.getElementById('email').insertAdjacentElement('afterend', errorSpan);
-    //     } else {
-    //         errorMessage.textContent = 'Please enter a valid email address.';
-    //         errorMessage.style.display = 'block';
-    //     }
-    //     return;
-    // }
-  };
+  const [errors, setErrors] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)({});
   const countryOptions = [{
     value: "US",
     text: "United States"
@@ -857,6 +763,100 @@ function BoatConfig(questionsData) {
       required: true
     }
   }];
+  (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
+    if (currentIndex <= questionsData.questions.length - 1) {
+      setQuestion(questionsData.questions[currentIndex]);
+    }
+    setProgress(currentIndex / questionsData.questions.length * 100);
+  }, [currentIndex]);
+  const handlePrevClick = () => {
+    if (currentIndex > 0) {
+      setCurrentIndex(currentIndex - 1);
+    }
+  };
+  const handleNextClick = () => {
+    if (currentIndex <= questionsData.questions.length - 1) {
+      setCurrentIndex(currentIndex + 1);
+    }
+  };
+  const updateAnswers = (questionIdentifier, value) => {
+    let answer = value.length ? {
+      ...value
+    } : value;
+    setErrors({
+      ...errors,
+      [questionIdentifier]: ''
+    });
+    setAnswers(prev => ({
+      ...prev,
+      [questionIdentifier]: answer
+    }));
+  };
+  const handleSubmit = e => {
+    e.preventDefault();
+    const newErrors = {};
+
+    // Check empty fields
+    contactFormFields.forEach(field => {
+      if (field.required.required && document.getElementById(field.id).value.trim() === '') {
+        newErrors[field.id] = 'Field should not be empty';
+        document.getElementById(field.id).style.border = '1px solid red';
+      } else if (field.id === "email" && !validateEmail(document.getElementById(field.id).value)) {
+        newErrors.email = 'Please enter a valid email address.';
+      }
+    });
+    setErrors(newErrors);
+    if (Object.keys(newErrors).length > 0) {
+      return;
+    }
+
+    // Extract contact information dynamically
+    const contactInfo = {};
+    contactFormFields.forEach(field => {
+      contactInfo[field.id] = answers[field.id];
+    });
+
+    // Extract answers to questions
+    const questionAnswers = {};
+    questionsData.questions.forEach((question, index) => {
+      const questionText = question.text;
+      const selectedOption = answers[questionText];
+      questionAnswers[questionText] = selectedOption;
+    });
+
+    // Prepare data to be sent to the backend
+    const formData = {
+      contactInfo: contactInfo,
+      questionAnswers: questionAnswers,
+      postId: questionsData.postId,
+      subscribe: answers.subscribe
+    };
+    setFormSubitting(true);
+    jQuery.ajax({
+      url: questionsData.ajaxUrl,
+      type: 'POST',
+      data: {
+        action: 'handle_form_submission',
+        security: questionsData.feNonce,
+        // Include nonce in the data payload
+        form_data: formData
+      },
+      success: function (response) {
+        if (response.success) {
+          console.log('success: ', response.data.text);
+          setFormSubmitMessage('Data submitted successfully!');
+          setFormSubmitSuccess(true);
+        } else {
+          console.log('Error:', response);
+          setFormSubmitMessage('Ooops! Something went wrong... please try again!');
+        }
+      },
+      error: function (xhr, status, error) {
+        console.log('AJAX error:', xhr.responseText);
+        setFormSubmitMessage('Ooops! Something went wrong... please try again!');
+      }
+    });
+  };
   return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, !formSubmitting && (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("form", {
     id: "bc-form"
   }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
@@ -909,7 +909,8 @@ function BoatConfig(questionsData) {
     type: field.type,
     placeholder: " ",
     style: {
-      fontSize: "20px"
+      fontSize: "20px",
+      borderColor: errors[field.id] ? 'red' : ''
     },
     id: field.id,
     name: field.id,
@@ -921,7 +922,8 @@ function BoatConfig(questionsData) {
     type: field.type,
     placeholder: " ",
     style: {
-      fontSize: "20px"
+      fontSize: "20px",
+      borderColor: errors[field.id] ? 'red' : ''
     },
     id: field.id,
     name: field.id,
@@ -932,7 +934,11 @@ function BoatConfig(questionsData) {
     value: option.value
   }, option.text))), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
     class: "input-bc-custom__label"
-  }, field.label))))), [{
+  }, field.label)), errors[field.id] && (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
+    style: {
+      color: 'red'
+    }
+  }, errors[field.id])))), [{
     id: 'subscribe',
     text: 'Embrace the future of boating by subscribing to receive updates from Hendrixon. Be the first to learn about new product launches, exclusive events, and more. By selecting "I agree," you authorize Hendrixon and our trusted partners to utilize your personal information for marketing and promotional activities. Set sail on a journey of innovation and luxury with us—where every update brings you closer to the voyage of your dreams.'
   }, {
@@ -965,14 +971,24 @@ function BoatConfig(questionsData) {
       margin: '3px 0 0 0',
       padding: '0 0 0 1em',
       fontSize: '10px',
-      textAlign: justify
+      textAlign: 'justify'
     }
   }, checkbox.id === 'subscribe' ? checkbox.text : (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, checkbox.text, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
     href: privacyPolicyUrl,
     target: "_blank",
     rel: "noopener noreferrer",
     title: "This link opens in new tab"
-  }, "Policies & Terms")))))))))), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+  }, "Policies & Terms"))))))), !answers.agreePolicies && (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "contact-row"
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    class: "col-5"
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
+    style: {
+      color: 'red',
+      fontSize: '10px',
+      paddingLeft: '28px'
+    }
+  }, "You have to agree to Terms and Policies to proceed")))))), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     class: ` pagination-footer ${currentIndex === 0 ? 'previous-disabled' : ''}`
   }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
     type: "button",
