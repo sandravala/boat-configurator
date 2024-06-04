@@ -12,6 +12,7 @@
         "platform-check": false,
         "platform": {
             "php": "7.4"
-         }
+         },
+         "phpcs.enable": true
     }
 }

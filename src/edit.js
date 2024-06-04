@@ -147,17 +147,7 @@ export default function Edit(props) {
 	return (
 		<>
 			<div {...useBlockProps()}>
-				{/* <BlockControls>
-					<AlignmentToolbar value={props.attributes.theAlignment} onChange={x => props.setAttributes({ theAlignment: x })} />
-				</BlockControls>
-				<InspectorControls>
-					<PanelBody title="Background Color" initialOpen={true}>
-						<PanelRow>
-							<ChromePicker color={props.attributes.bgColor} onChangeComplete={x => props.setAttributes({ bgColor: x.hex })} disableAlpha={true} />
-						</PanelRow>
-					</PanelBody>
-				</InspectorControls> */}
-				<label class="input-bc-custom">
+				<label className="input-bc-custom">
 					<input
 						class="input-bc-custom__field"
 						type="text" placeholder=" "
@@ -165,27 +155,26 @@ export default function Edit(props) {
 						onChange={(event) => updateModel(event.target.value)}
 						style={{ fontSize: "20px" }}
 					/>
-					<span class="input-bc-custom__label">Model:</span>
+					<span className="input-bc-custom__label">Model:</span>
 				</label>
-				{/* <TextControl label="Model:" value={props.attributes.model} onChange={updateModel} style={{ fontSize: "20px" }} /> */}
 				<p style={{ fontSize: "13px", margin: "20px 0 8px 0", paddingLeft: "1.4em", color: "#b0afaf" }}>Questions:</p>
 
 				{props.attributes.questions.map(function (question, questionIndex) {
 
 					const isActive = accordionStates[questionIndex] || false;
 					return (
-						<Flex>
+						<Flex key={questionIndex}>
 							<FlexItem style={{ flex: 20 }}>
-								<div key={questionIndex} class="accordion">
-									<div class={`accordion-header ${!isActive ? 'closed' : ''}`} >
+								<div key={questionIndex} className="accordion">
+									<div className={`accordion-header ${!isActive ? 'closed' : ''}`} >
 										<Flex>
 											<Flex className="question-header" >
 												<FlexBlock className="stacked">
 													<FlexItem className="question-arrows">
-														{questionIndex > 0 ? <span class="dashicons dashicons-arrow-up-alt2" onClick={() => moveQuestion(questionIndex, true)}></span> : <span class="dashicons dashicons-arrow-up-alt2" style={{ color: "#dfdfdf" }}></span>}
+														{questionIndex > 0 ? <span className="dashicons dashicons-arrow-up-alt2" onClick={() => moveQuestion(questionIndex, true)}></span> : <span className="dashicons dashicons-arrow-up-alt2" style={{ color: "#dfdfdf" }}></span>}
 													</FlexItem>
 													<FlexItem className="question-arrows">
-														{questionIndex < props.attributes.questions.length - 1 ? <span class="dashicons dashicons-arrow-down-alt2" onClick={() => moveQuestion(questionIndex)}></span> : <span class="dashicons dashicons-arrow-down-alt2" style={{ color: "#dfdfdf" }}></span>}
+														{questionIndex < props.attributes.questions.length - 1 ? <span className="dashicons dashicons-arrow-down-alt2" onClick={() => moveQuestion(questionIndex)}></span> : <span className="dashicons dashicons-arrow-down-alt2" style={{ color: "#dfdfdf" }}></span>}
 													</FlexItem>
 												</FlexBlock>
 												<FlexItem className="question-header" onClick={() => toggleAccordion(questionIndex)}>
@@ -199,7 +188,7 @@ export default function Edit(props) {
 											</Flex>
 											<Flex className="question-expand">
 												<FlexItem>
-													<span class={`dashicons dashicons-${isActive ? 'minus' : 'plus'}`} onClick={() => toggleAccordion(questionIndex)}></span>
+													<span className={`dashicons dashicons-${isActive ? 'minus' : 'plus'}`} onClick={() => toggleAccordion(questionIndex)}></span>
 												</FlexItem>
 											</Flex>
 										</Flex>
@@ -209,9 +198,9 @@ export default function Edit(props) {
 											<Flex className="question-container">
 
 												<FlexBlock>
-													<label class="input-bc-custom">
+													<label className="input-bc-custom">
 														<input
-															class="input-bc-custom__field"
+															className="input-bc-custom__field"
 															type="text"
 															placeholder=" "
 															value={question.text}
@@ -221,22 +210,22 @@ export default function Edit(props) {
 																props.setAttributes({ questions: newQuestions }); // Set the updated questions array in the attributes
 															}}
 															style={{ fontSize: "15px" }} />
-														<span class="input-bc-custom__label question">Question text:</span>
+														<span className="input-bc-custom__label question">Question text:</span>
 													</label>
 
-													<div class="container">
+													<div className="container">
 
-														<div class="container">
+														<div className="container">
 															{question.options.map((option, optionIndex) => {
 
 																return (
-																	<div class="card">
-																		<span class="dashicons dashicons-no delete-option" onClick={() => deleteOption(questionIndex, optionIndex)}></span>
-																		<div class="top-text">
-																			<div class="option">
-																				<label class="input-bc-custom">
+																	<div className="card" key={`${questionIndex}-${optionIndex}`}>
+																		<span className="dashicons dashicons-no delete-option" onClick={() => deleteOption(questionIndex, optionIndex)}></span>
+																		<div className="top-text">
+																			<div className="option">
+																				<label className="input-bc-custom">
 																					<input
-																						class="input-bc-custom__field"
+																						className="input-bc-custom__field"
 																						type="text"
 																						placeholder=" "
 																						value={option.optionText}
@@ -246,7 +235,7 @@ export default function Edit(props) {
 																							props.setAttributes({ questions: newQuestions });
 																						}}
 																						style={{ fontSize: "15px" }} />
-																					<span class="input-bc-custom__label">Option text:</span>
+																					<span className="input-bc-custom__label">Option text:</span>
 																				</label>
 																			</div>
 																		</div>
@@ -260,10 +249,10 @@ export default function Edit(props) {
 																				}}
 																				allowedTypes={['image']}
 																				render={({ open }) => (
-																					<span class="dashicons dashicons-format-image" onClick={open}></span>
+																					<span className="dashicons dashicons-format-image" onClick={open}></span>
 																				)}
 																			/>
-																			<span class="dashicons dashicons-color-picker" onClick={() => openColorPicker(questionIndex, optionIndex)}></span>
+																			<span className="dashicons dashicons-color-picker" onClick={() => openColorPicker(questionIndex, optionIndex)}></span>
 																			{colorPickerStates[questionIndex][optionIndex] && (
 																				<Modal title="Pick the color" onRequestClose={() => openColorPicker(questionIndex, optionIndex)}>
 																					<ColorPicker
@@ -278,7 +267,7 @@ export default function Edit(props) {
 																				</Modal>
 																			)}
 																		</div>
-																		<div class="img">
+																		<div className="img">
 																			{option.imgUrl && <img src={option.imgUrl} alt={option.optionText} />}
 																			{option.color && <div style={{ background: option.color, height: '100%', width: '100%' }}></div>}
 
@@ -288,8 +277,8 @@ export default function Edit(props) {
 															})}
 														</div>
 
-														<div class="card-plus">
-															<span class="dashicons dashicons-insert add-option" onClick={() => addNewOption(questionIndex)}></span>
+														<div className="card-plus">
+															<span className="dashicons dashicons-insert add-option" onClick={() => addNewOption(questionIndex)}></span>
 														</div>
 													</div>
 												</FlexBlock>
@@ -299,7 +288,7 @@ export default function Edit(props) {
 								</div>
 							</FlexItem>
 							<FlexItem className="delete-question" style={{ flex: 1 }}>
-								<span class="dashicons dashicons-trash delete-btn" onClick={() => deleteQuestion(questionIndex)}></span>
+								<span className="dashicons dashicons-trash delete-btn" onClick={() => deleteQuestion(questionIndex)}></span>
 							</FlexItem>
 						</Flex>
 
@@ -312,28 +301,3 @@ export default function Edit(props) {
 		</>
 	)
 }
-
-
-
-
-//5. Laivo konfiguracijos pasirinkimai:
-
-// Konkrečių dar neturime. Tad surašau preleminarius
-// Variklis
-// 50ag
-// 100ag
-// 150ag
-// Stogelis
-// Sulankstomas
-// nėra stogelio
-// Vidaus medžiagos spalva
-// Gelsva
-// Pilka
-// Rožinė
-// Garso aparatūra
-// Nėra
-// Bazinė
-// Pagerinta
-// Navigacija
-// Garmin
-// Kinietiška

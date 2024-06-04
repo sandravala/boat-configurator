@@ -10,6 +10,17 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
+    var fileUploadBtn = document.getElementById('file_upload_bc_import');
+    
+    if (fileUploadBtn) {
+        var bcImportBtn = document.getElementById('btn_bc_import');
+        fileUploadBtn.addEventListener('change', function() {
+            if (fileUploadBtn.files.length > 0) {
+            bcImportBtn.disabled = false;
+            }
+        })
+    }
+
 
 });
 
@@ -79,6 +90,8 @@ jQuery(document).ready(function($) {
                 $('#entries-container').html(response);
             }
         });
+
+        console.log(JSON.stringify(data));
     }
 
     $('#search-input, #start_date, #end_date').on('input change', function() {
@@ -87,6 +100,7 @@ jQuery(document).ready(function($) {
 
 
     $(document).on('click', '.sort-column', function() {
+        
         var column = $(this).data('column');
         var order = $(this).data('order');
 
@@ -95,13 +109,19 @@ jQuery(document).ready(function($) {
             order = 'desc';
         } else if (order === 'desc') {
             order = 'none';
-        } else {
+         } else {
             order = 'asc';
         }
 
         // Set the new sort data
         $('#entries-container').data('sort-column', column);
         $('#entries-container').data('sort-order', order);
+
+            // Update the URL parameters
+        var urlParams = new URLSearchParams(window.location.search);
+        urlParams.set('sort_column', column);
+        urlParams.set('sort_order', order);
+        console.log(urlParams.toString());
 
         fetchEntries();
     });

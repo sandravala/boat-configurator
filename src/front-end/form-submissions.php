@@ -1,13 +1,12 @@
 <?php
 
-use MailerLite\Mailerlite;
+use Mailerlite;
 add_action('wp_ajax_nopriv_handle_form_submission', 'handle_form_submission');
 add_action('wp_ajax_handle_form_submission', 'handle_form_submission');
 
 function handle_form_submission()
 {
 
-    error_log('entered handle_form_submission');
     if (!check_ajax_referer('bc_frontend_view_nonce', 'security')) {
         wp_send_json_error(array('message' => 'Invalid nonce'));
         wp_die();
@@ -38,7 +37,6 @@ function handle_form_submission()
             // Add the sanitized answer to the sanitized array
             $sanitizedQuestionAnswers[$sanitizedQuestion] = $sanitizedAnswer;
         }
-        // error_log(print_r($sanitizedQuestionAnswers, true));
     }
 
     if (isset($form_data['contactInfo'])) {
@@ -74,8 +72,6 @@ function handle_form_submission()
             // Add the sanitized value to the sanitized contact info array
             $sanitizedContactInfo[$fieldId] = $sanitizedValue;
         }
-
-        // error_log(print_r($sanitizedContactInfo, true));
     }
 
     $sanitizedPostId = absint( $form_data['postId'] );
@@ -86,7 +82,6 @@ function handle_form_submission()
     $email = isset($sanitizedContactInfo['email']) ? $sanitizedContactInfo['email'] : '';
 
     if (empty($email)) {
-        error_log('Email is empty');
         wp_send_json_error('Email is required');
         return;
     }
@@ -111,6 +106,7 @@ function saveBoatConfigToDB( $sanitizedQuestionAnswers, $sanitizedContactInfo, $
     global $wpdb;
     // Insert form data into the database table
     $table_name = $wpdb->prefix . DB_TABLE; // Replace 'your_table_name' with your actual table name
+    // phpcs:disable
     $wpdb->insert(
         $table_name,
         array(
@@ -138,8 +134,8 @@ function saveBoatConfigToDB( $sanitizedQuestionAnswers, $sanitizedContactInfo, $
             '%s',
             '%s'
         )
-    );
-    // Handle any additional actions after data insertion, such as sending emails, etc.
+    ); 
+    // phpcs:enable
 }
 
 function subscribeToMailerlite ( $sanitizedContactInfo ) {
@@ -156,9 +152,8 @@ function subscribeToMailerlite ( $sanitizedContactInfo ) {
         $group_id = $data_encryption->decrypt(get_option('bc_ml_group_id'));
     }
 
-
-    
-    
+    $group_id = 123; //error pagaudymui
+   
     $mailerLite = new MailerLite(['api_key' => $api_key]);
     
     $data = [
@@ -178,15 +173,36 @@ function subscribeToMailerlite ( $sanitizedContactInfo ) {
         $data['groups'] = [$group_id];
     }
 
-   
-    $response = $mailerLite->subscribers->create($data);
-    error_log(print_r($response, true));
+    try {
+        $response = $mailerLite->subscribers->create($data);
+    } catch (Exception $e) {
+       // Send email to admin
+        sendSubscriptionErrorEmailToAdmin($sanitizedContactInfo, $e->getMessage());
+        return false;
+    }
+      return true;
+}
 
+function sendSubscriptionErrorEmailToAdmin ( $sanitizedContactInfo, $errorMessage )
+{
+    $admin_email = get_option('admin_email');
+    $subject = 'Failed MailerLite Subscription Attempt';
+
+    // Construct the message including all contact fields
+    $message = 'A user attempted to subscribe with the following details but encountered an error: ' . PHP_EOL;
+    foreach ($sanitizedContactInfo as $field => $value) {
+        $message .= ucfirst($field) . ': ' . $value . PHP_EOL;
+    }
+    $message .= 'Error Message: ' . $errorMessage;
+
+    // Send email to admin
+    wp_mail($admin_email, $subject, $message);
 }
 
 function sendEmailToAdmin ( $sanitizedQuestionAnswers, $sanitizedContactInfo, $sanitizedPostTitle ) {
 
-    $admin_email = get_option('admin_email');
+    $email_to_notify = sanitize_email(get_option('bc_email_ntf'));
+    $admin_email = $email_to_notify ? $email_to_notify : sanitize_email(get_option('admin_email'));
     $subject = 'New ' . esc_html($sanitizedPostTitle) . ' Configuration received';
 
     // HTML email content for Admin
@@ -236,7 +252,6 @@ function sendEmailToAdmin ( $sanitizedQuestionAnswers, $sanitizedContactInfo, $s
     $headers = array('Content-Type: text/html; charset=UTF-8');
 
     if (!wp_mail($admin_email, $subject, $admin_message, $headers)) {
-        error_log('Failed to send admin email');
         wp_send_json_error('Failed to send email');
         return;
     }
@@ -291,7 +306,6 @@ function sendEmailToUser ( $sanitizedQuestionAnswers, $sanitizedContactInfo, $sa
     $headers = array('Content-Type: text/html; charset=UTF-8');
 
     if (!wp_mail($email, $user_subject, $user_message, $headers)) {
-        error_log('Failed to send user email');
         wp_send_json_error('Failed to send email');
         return;
     }

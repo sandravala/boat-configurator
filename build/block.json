@@ -2,11 +2,11 @@
   "$schema": "https://schemas.wp.org/trunk/block.json",
   "apiVersion": 3,
   "name": "create-block/boat-configurator",
-  "version": "0.1.0",
+  "version": "1.1.0",
   "title": "Boat Configurator",
   "category": "text",
   "icon": "admin-generic",
-  "description": "Example block scaffolded with Create Block tool.",
+  "description": "Boat Configurator block scaffolded with Create Block tool.",
   "example": {},
   "supports": {
     "html": false
@@ -14,8 +14,12 @@
   "textdomain": "boat-configurator",
   "editorScript": "file:./index.js",
   "editorStyle": "file:./index.css",
-  "style": "file:./style-index.css",
+  "style": [
+    "file:./style-index.css",
+    "file:./admin/custom-bc-admin-style.css"
+  ],
   "viewScript": "file:./view.js",
+  "script": [],
   "attributes": {
     "model": {
       "type": "string"

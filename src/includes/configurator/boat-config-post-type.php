@@ -43,10 +43,7 @@ function cpt_register_post_type()
 		'capability_type'    => 'page',
 		'has_archive'        => true,
         'show_in_rest'          => true,
-		//'hierarchical'       => false,
-		//'menu_position'      => null,
-		//'taxonomies'          => array( 'category' ),
-		'supports'           => array( 'editor' ),
+		'supports'           => array( 'editor', 'thumbnail', 'title' ),
 		'template'           => array(
             array(
                 'core/pattern',

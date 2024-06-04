@@ -187,13 +187,9 @@ div.delete-question {
 		top: -.8em;
 		padding: 0 .5em;
 		font-size: small;
-		/* padding: calc(var(--size-bezel)* 0.75) calc(var(--size-bezel)* 0.5); */
-		/* margin: calc(var(--size-bezel)* 0.75 + 3px) calc(var(--size-bezel)* 0.5); */
 		background: white;
 		white-space: nowrap;
 		color: #b0afaf;
-		/* font-weight: bold; */
-		/* line-height: 1.2; */
 	}
 	&__label.question {
 		background: white;

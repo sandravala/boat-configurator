@@ -21,6 +21,14 @@ import Edit from './edit';
 import save from './save';
 import metadata from './block.json';
 
+
+// Import asset files
+import './assets/icon.svg';
+import './assets/laivas slider.webp';
+
+import './admin/custom-bc-admin-script.js';
+import './admin/custom-bc-admin-style.css';
+
 /**
  * Every block starts by registering a new block type definition.
  *

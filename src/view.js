@@ -4,9 +4,9 @@ import ReactDOM from 'react-dom';
 
 document.addEventListener('DOMContentLoaded', function () {
 
-    const bcDataFront = bcData;
-    renderForm(bcDataFront);
-    document.getElementById('create-block-boat-configurator-script-js-before').remove();
+        const bcDataFront = bcData;
+        renderForm(bcDataFront);
+        document.getElementById('create-block-boat-configurator-view-script-js-before').remove();
 
 });
 
@@ -482,10 +482,6 @@ function BoatConfig(questionsData) {
                             </div>
                         </div>
 
-
-
-
-
                         <div class={` pagination-footer ${currentIndex === 0 ? 'previous-disabled' : ''}`}>
                             <button type="button" class="previous" onClick={handlePrevClick} disabled={currentIndex === 0}>Previous</button>
                             <button type="button" class="next" onClick={handleNextClick} disabled={currentIndex > questionsData.questions.length - 1}>Next</button>
@@ -531,7 +527,6 @@ function BoatConfig(questionsData) {
 }
 
 function validateEmail(email) {
-
 
     // Test for the minimum length the email can be
     if (email.trim().length < 6) {

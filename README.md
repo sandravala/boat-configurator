@@ -5,170 +5,18 @@ boat-configurator
 ├─ .gitignore
 ├─ boat-configurator.php
 ├─ build
-│  ├─ block.json
-│  ├─ index.asset.php
-│  ├─ index.css
-│  ├─ index.css.map
-│  ├─ index.js
-│  ├─ index.js.map
-│  ├─ render.php
-│  ├─ style-index.css
-│  ├─ style-index.css.map
-│  ├─ view.asset.php
-│  ├─ view.js
-│  └─ view.js.map
-├─ form-submissions.php
-├─ package-lock.json
-├─ package.json
-├─ plan.txt
-├─ readme.txt
-└─ src
-   ├─ block.json
-   ├─ components
-   │  └─ form_front_end.js
-   ├─ edit.js
-   ├─ editor.scss
-   ├─ index.js
-   ├─ render.php
-   ├─ save.js
-   ├─ style.scss
-   └─ view.js
-
-```
-```
-boat-configurator
-├─ .editorconfig
-├─ .gitignore
-├─ boat-configurator.php
-├─ build
-│  ├─ block.json
-│  ├─ index.asset.php
-│  ├─ index.css
-│  ├─ index.css.map
-│  ├─ index.js
-│  ├─ index.js.map
-│  ├─ render.php
-│  ├─ style-index.css
-│  ├─ style-index.css.map
-│  ├─ view.asset.php
-│  ├─ view.js
-│  └─ view.js.map
-├─ constants.php
-├─ form-submissions.php
-├─ package-lock.json
-├─ package.json
-├─ plan.txt
-├─ README.md
-├─ readme.txt
-├─ src
-│  ├─ block.json
-│  ├─ components
-│  │  └─ form_front_end.js
-│  ├─ edit.js
-│  ├─ editor.scss
-│  ├─ index.js
-│  ├─ render.php
-│  ├─ save.js
-│  ├─ style.scss
-│  └─ view.js
-└─ thank-you.php
-
-//version 3
-
-```
-boat-configurator
-├─ .editorconfig
-├─ .git
-├─ .gitignore
-├─ blocks-list.php
-├─ boat-config-pattern.php
-├─ boat-config-post-type.php
-├─ boat-configurator.php
-├─ build
-│  ├─ block.json
-│  ├─ index.asset.php
-│  ├─ index.css
-│  ├─ index.css.map
-│  ├─ index.js
-│  ├─ index.js.map
-│  ├─ render.php
-│  ├─ style-index.css
-│  ├─ style-index.css.map
-│  ├─ view.asset.php
-│  ├─ view.js
-│  └─ view.js.map
-├─ composer.json
-├─ composer.lock
-├─ constants.php
-├─ form-entries-list.php
-├─ form-submissions.php
-├─ package-lock.json
-├─ package.json
-├─ plan.txt
-├─ README.md
-├─ readme.txt
-├─ src
-│  ├─ assets
-│  │  └─ icon.svg
-│  ├─ block.json
-│  ├─ components
-│  │  └─ form_front_end.js
-│  ├─ edit.js
-│  ├─ editor.scss
-│  ├─ index.js
-│  ├─ render.php
-│  ├─ save.js
-│  ├─ style.scss
-│  └─ view.js
-├─ thank-you.php
-└─ vendor
-
-
-```
-```
-boat-configurator
-├─ .editorconfig
-├─ .git
-│  ├─ COMMIT_EDITMSG
-│  ├─ config
-│  ├─ description
-│  ├─ FETCH_HEAD
-│  ├─ HEAD
-│  ├─ hooks
-│  │  ├─ applypatch-msg.sample
-│  │  ├─ commit-msg.sample
-│  │  ├─ fsmonitor-watchman.sample
-│  │  ├─ post-update.sample
-│  │  ├─ pre-applypatch.sample
-│  │  ├─ pre-commit.sample
-│  │  ├─ pre-merge-commit.sample
-│  │  ├─ pre-push.sample
-│  │  ├─ pre-rebase.sample
-│  │  ├─ pre-receive.sample
-│  │  ├─ prepare-commit-msg.sample
-│  │  ├─ push-to-checkout.sample
-│  │  └─ update.sample
-│  ├─ index
-│  ├─ info
-│  │  └─ exclude
-│  │  ├─ info
-│  │  └─ pack
-│  ├─ ORIG_HEAD
-│  └─ refs
-│     ├─ heads
-│     │  └─ main
-│     ├─ remotes
-│     │  └─ origin
-│     │     └─ main
-│     └─ tags
-├─ .gitignore
-├─ boat-configurator.php
-├─ build
+│  ├─ admin
+│  │  ├─ blocks-list.php
+│  │  ├─ form-entries-list.php
+│  │  ├─ key-encryption.php
+│  │  └─ settings-page.php
 │  ├─ block.json
 │  ├─ front-end
-│  │  ├─ multistep-form.asset.php
-│  │  ├─ multistep-form.js
-│  │  └─ multistep-form.js.map
+│  │  └─ form-submissions.php
+│  ├─ includes
+│  │  └─ configurator
+│  │     ├─ boat-config-pattern.php
+│  │     └─ boat-config-post-type.php
 │  ├─ index.asset.php
 │  ├─ index.css
 │  ├─ index.css.map
@@ -197,27 +45,25 @@ boat-configurator
 │  │  ├─ key-encryption.php
 │  │  └─ settings-page.php
 │  ├─ assets
-│  │  └─ icon.svg
+│  │  ├─ icon.svg
+│  │  └─ laivas slider.webp
 │  ├─ block.json
-│  ├─ boat-config-block
 │  ├─ edit.js
 │  ├─ editor.scss
 │  ├─ front-end
-│  │  ├─ form-submissions.php
-│  │  └─ multistep-form.js
+│  │  └─ form-submissions.php
 │  ├─ includes
-│  │  ├─ configurator
-│  │  │  ├─ boat-config-pattern.php
-│  │  │  └─ boat-config-post-type.php
-│  │  └─ encryption
+│  │  └─ configurator
+│  │     ├─ boat-config-pattern.php
+│  │     └─ boat-config-post-type.php
 │  ├─ index.js
-│  ├─ render copy.php
 │  ├─ render.php
 │  ├─ save.js
 │  ├─ style.scss
 │  └─ view.js
 └─ vendor
    ├─ autoload.php
+   ├─ bin
    ├─ clue
    │  └─ stream-filter
    │     ├─ .github
@@ -577,18 +423,24 @@ boat-configurator
    │  └─ log
    │     ├─ composer.json
    │     ├─ LICENSE
-   │     ├─ README.md
-   │     └─ src
-   │        ├─ AbstractLogger.php
-   │        ├─ InvalidArgumentException.php
-   │        ├─ LoggerAwareInterface.php
-   │        ├─ LoggerAwareTrait.php
-   │        ├─ LoggerInterface.php
-   │        ├─ LoggerTrait.php
-   │        ├─ LogLevel.php
-   │        └─ NullLogger.php
+   │     ├─ Psr
+   │     │  └─ Log
+   │     │     ├─ AbstractLogger.php
+   │     │     ├─ InvalidArgumentException.php
+   │     │     ├─ LoggerAwareInterface.php
+   │     │     ├─ LoggerAwareTrait.php
+   │     │     ├─ LoggerInterface.php
+   │     │     ├─ LoggerTrait.php
+   │     │     ├─ LogLevel.php
+   │     │     ├─ NullLogger.php
+   │     │     └─ Test
+   │     │        ├─ DummyTest.php
+   │     │        ├─ LoggerInterfaceTest.php
+   │     │        └─ TestLogger.php
+   │     └─ README.md
    └─ symfony
       ├─ deprecation-contracts
+      │  ├─ .gitignore
       │  ├─ CHANGELOG.md
       │  ├─ composer.json
       │  ├─ function.php
@@ -735,6 +587,7 @@ boat-configurator
       │        ├─ UnhandledMatchError.php
       │        └─ ValueError.php
       └─ service-contracts
+         ├─ .gitignore
          ├─ Attribute
          │  ├─ Required.php
          │  └─ SubscribedService.php
@@ -743,9 +596,7 @@ boat-configurator
          ├─ LICENSE
          ├─ README.md
          ├─ ResetInterface.php
-         ├─ ServiceCollectionInterface.php
          ├─ ServiceLocatorTrait.php
-         ├─ ServiceMethodsSubscriberTrait.php
          ├─ ServiceProviderInterface.php
          ├─ ServiceSubscriberInterface.php
          ├─ ServiceSubscriberTrait.php

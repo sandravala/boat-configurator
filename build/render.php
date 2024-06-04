@@ -13,17 +13,7 @@ $data['boatConfigArchive'] = get_post_type_archive_link( 'boat_config' );
 $data['postId'] = get_the_ID();
 wp_enqueue_script('jquery');
 
-// // Construct the JavaScript code to assign bcData
-// $js_code = 'const bcData = ' . wp_json_encode($data) . ';';
-
-// // Check if bcData is already defined
-// $js_code .= 'if (typeof bcData !== "undefined") { bcData = ' . wp_json_encode($data) . '; }';
-
-// // Add the JavaScript code to the specified script handle
-// wp_add_inline_script('create-block-boat-configurator-script', $js_code, 'before');
-
-wp_add_inline_script('create-block-boat-configurator-script', 'const bcData = ' . wp_json_encode($data) . ';', 'before');
-// wp_send_json( $attributes );
+wp_add_inline_script('create-block-boat-configurator-view-script', 'const bcData = ' . wp_json_encode($data) . ';', 'before');
 
 ?>
 
