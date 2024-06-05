@@ -201,6 +201,9 @@
 	[type=radio]:checked+.card {
 		outline: 2px solid #05b3bc;
 	}
+	[type=radio].chosen+.card {
+		outline: 2px solid #05b3bc;
+	}
 	
 	.contact-row {
 		display: flex;

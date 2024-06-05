@@ -3,7 +3,7 @@
         'name' => '__root__',
         'pretty_version' => 'dev-main',
         'version' => 'dev-main',
-        'reference' => '4bed3bea49c9a94b7d49d6c3488825417c6dc2ee',
+        'reference' => 'b4332912b1cce7f70784526da7d05130ad87d8fe',
         'type' => 'library',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -13,7 +13,7 @@
         '__root__' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => '4bed3bea49c9a94b7d49d6c3488825417c6dc2ee',
+            'reference' => 'b4332912b1cce7f70784526da7d05130ad87d8fe',
             'type' => 'library',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
@@ -146,8 +146,8 @@
         'psr/http-factory-implementation' => array(
             'dev_requirement' => false,
             'provided' => array(
-                0 => '1.0',
-                1 => '*',
+                0 => '*',
+                1 => '1.0',
             ),
         ),
         'psr/http-message' => array(
@@ -162,8 +162,8 @@
         'psr/http-message-implementation' => array(
             'dev_requirement' => false,
             'provided' => array(
-                0 => '1.0',
-                1 => '*',
+                0 => '*',
+                1 => '1.0',
             ),
         ),
         'psr/log' => array(
@@ -185,9 +185,9 @@
             'dev_requirement' => false,
         ),
         'symfony/http-client' => array(
-            'pretty_version' => 'v5.4.39',
-            'version' => '5.4.39.0',
-            'reference' => '3cdc551aa98173bb8bac7e5ee49f3526abde0b04',
+            'pretty_version' => 'v5.4.40',
+            'version' => '5.4.40.0',
+            'reference' => '970a4d5a3393be3ba987b91a018e98ee332db63b',
             'type' => 'library',
             'install_path' => __DIR__ . '/../symfony/http-client',
             'aliases' => array(),
@@ -209,9 +209,9 @@
             ),
         ),
         'symfony/options-resolver' => array(
-            'pretty_version' => 'v5.4.39',
-            'version' => '5.4.39.0',
-            'reference' => '1303bb73d6c3882f07c618129295503085dfddb9',
+            'pretty_version' => 'v5.4.40',
+            'version' => '5.4.40.0',
+            'reference' => 'bd1afbde6613a8d6b956115e0e14b196191fd0c4',
             'type' => 'library',
             'install_path' => __DIR__ . '/../symfony/options-resolver',
             'aliases' => array(),

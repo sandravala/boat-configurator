@@ -904,17 +904,17 @@
         },
         {
             "name": "symfony/http-client",
-            "version": "v5.4.39",
-            "version_normalized": "5.4.39.0",
+            "version": "v5.4.40",
+            "version_normalized": "5.4.40.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/http-client.git",
-                "reference": "3cdc551aa98173bb8bac7e5ee49f3526abde0b04"
+                "reference": "970a4d5a3393be3ba987b91a018e98ee332db63b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/http-client/zipball/3cdc551aa98173bb8bac7e5ee49f3526abde0b04",
-                "reference": "3cdc551aa98173bb8bac7e5ee49f3526abde0b04",
+                "url": "https://api.github.com/repos/symfony/http-client/zipball/970a4d5a3393be3ba987b91a018e98ee332db63b",
+                "reference": "970a4d5a3393be3ba987b91a018e98ee332db63b",
                 "shasum": ""
             },
             "require": {
@@ -947,7 +947,7 @@
                 "symfony/process": "^4.4|^5.0|^6.0",
                 "symfony/stopwatch": "^4.4|^5.0|^6.0"
             },
-            "time": "2024-04-18T08:26:06+00:00",
+            "time": "2024-05-31T14:33:22+00:00",
             "type": "library",
             "installation-source": "dist",
             "autoload": {
@@ -978,7 +978,7 @@
                 "http"
             ],
             "support": {
-                "source": "https://github.com/symfony/http-client/tree/v5.4.39"
+                "source": "https://github.com/symfony/http-client/tree/v5.4.40"
             },
             "funding": [
                 {
@@ -1079,17 +1079,17 @@
         },
         {
             "name": "symfony/options-resolver",
-            "version": "v5.4.39",
-            "version_normalized": "5.4.39.0",
+            "version": "v5.4.40",
+            "version_normalized": "5.4.40.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/options-resolver.git",
-                "reference": "1303bb73d6c3882f07c618129295503085dfddb9"
+                "reference": "bd1afbde6613a8d6b956115e0e14b196191fd0c4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/options-resolver/zipball/1303bb73d6c3882f07c618129295503085dfddb9",
-                "reference": "1303bb73d6c3882f07c618129295503085dfddb9",
+                "url": "https://api.github.com/repos/symfony/options-resolver/zipball/bd1afbde6613a8d6b956115e0e14b196191fd0c4",
+                "reference": "bd1afbde6613a8d6b956115e0e14b196191fd0c4",
                 "shasum": ""
             },
             "require": {
@@ -1098,7 +1098,7 @@
                 "symfony/polyfill-php73": "~1.0",
                 "symfony/polyfill-php80": "^1.16"
             },
-            "time": "2024-04-18T08:26:06+00:00",
+            "time": "2024-05-31T14:33:22+00:00",
             "type": "library",
             "installation-source": "dist",
             "autoload": {
@@ -1131,7 +1131,7 @@
                 "options"
             ],
             "support": {
-                "source": "https://github.com/symfony/options-resolver/tree/v5.4.39"
+                "source": "https://github.com/symfony/options-resolver/tree/v5.4.40"
             },
             "funding": [
                 {

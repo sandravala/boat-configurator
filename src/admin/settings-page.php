@@ -94,8 +94,16 @@ function boat_config_export_data() {
         // Get all post data
         $post_data = (array) $post;
 
+        // Sanitize post data
+        foreach ($post_data as $key => $value) {
+            $post_data[$key] = sanitize_text_field($value);
+        }
+
         // Get post meta data
         $post_meta = get_post_meta($post->ID);
+        foreach ($post_meta as $meta_key => $meta_value) {
+            $post_meta[$meta_key] = sanitize_text_field($meta_value[0]);
+        }
         $post_data['meta'] = $post_meta;
 
         // Get taxonomy terms
@@ -103,27 +111,32 @@ function boat_config_export_data() {
         $taxonomies = get_object_taxonomies($post->post_type);
         foreach ($taxonomies as $taxonomy) {
             $terms = wp_get_post_terms($post->ID, $taxonomy);
-            $taxonomy_terms[$taxonomy] = $terms;
+            foreach ($terms as $term) {
+                $taxonomy_terms[$taxonomy][] = sanitize_text_field($term->name);
+            }
         }
         $post_data['taxonomy_terms'] = $taxonomy_terms;
 
         // Get featured image URL
         $featured_image_url = get_the_post_thumbnail_url($post->ID, 'full');
-        $post_data['featured_image_url'] = $featured_image_url;
+        $post_data['featured_image_url'] = esc_url_raw($featured_image_url);
 
         // Add the post data to the export data
         $export_data['custom_posts'][] = $post_data;
     }
 
     global $wpdb;
-    $table_name = $wpdb->prefix . DB_TABLE; 
+    $table_name = $wpdb->prefix . DB_TABLE;
 
     // phpcs:disable
-    $custom_table_data = $wpdb->get_results( $wpdb->prepare("SELECT * FROM %i", $table_name ), ARRAY_A); //db call ok; no-cache ok
+    $custom_table_data = $wpdb->get_results($wpdb->prepare("SELECT * FROM $table_name"), ARRAY_A); //db call ok; no-cache ok
     // phpcs:enable
 
-    foreach($custom_table_data as &$entry) {
+    foreach ($custom_table_data as &$entry) {
         $entry['answers'] = wp_json_encode(maybe_unserialize($entry['answers']));
+        foreach ($entry as $key => $value) {
+            $entry[$key] = sanitize_text_field($value);
+        }
     }
     unset($entry);
 
@@ -139,11 +152,12 @@ function boat_config_export_data() {
     header('Content-Disposition: attachment; filename="' . $file_name . '"');
 
     // Output the serialized data
-    echo wp_kses_post($export_json);
+    echo $export_json;
 
     // Don't forget to exit to prevent further output
     exit;
 }
+
 
 // Import function
 function boat_config_import_data() {
@@ -160,34 +174,51 @@ function boat_config_import_data() {
             if (isset($_FILES['import_file']) && $_FILES['import_file']['error'] === UPLOAD_ERR_OK) {
                 $file_path = $_FILES['import_file']['tmp_name'];
 
+                // Log file path and status
+                error_log('Import file uploaded successfully. Path: ' . $file_path);
+
                 // Process the uploaded file (parse, validate, import data)
                 $status = import_custom_posts_from_file($file_path);
                 
+                // Log the status
+                error_log('Import status: ' . $status);
+                
                 // Display a success message
                 wp_redirect($_SERVER['HTTP_REFERER'] . '&ie_status=' . $status);
-                
+                exit;
             } else {
                 // Handle file upload error
+                error_log('File upload error: ' . $_FILES['import_file']['error']);
                 wp_redirect($_SERVER['HTTP_REFERER'] . '&ie_status=-1');
-                
+                exit;
             }
         } else {
             // Nonce verification failed
+            error_log('Nonce verification failed.');
             wp_redirect($_SERVER['HTTP_REFERER'] . '&ie_status=-2');
+            exit;
         }
     }
-
 }
 
+
 function import_custom_posts_from_file($file_path) {
-
-
     global $wpdb;
     $table_name = $wpdb->prefix . DB_TABLE;
 
-    // Attempt to read and decode the file contents
-    $export_data = json_decode(wp_remote_get($file_path), true);
-    //error_log(print_r($export_data, true));
+    // Attempt to read the file contents
+    $file_contents = file_get_contents($file_path);
+    if ($file_contents === false) {
+        error_log('Failed to read file contents.');
+        return 1;
+    }
+
+    // Decode the JSON data
+    $export_data = json_decode($file_contents, true);
+    if (json_last_error() !== JSON_ERROR_NONE) {
+        error_log('JSON decode error: ' . json_last_error_msg());
+        return 1;
+    }
 
     if (!$export_data) {
         // Invalid or empty export data
@@ -195,6 +226,10 @@ function import_custom_posts_from_file($file_path) {
         return 1;
     }
 
+    // Log the data structure for debugging
+    error_log('Export data: ' . print_r($export_data, true));
+
+    // Import custom posts
     if (isset($export_data['custom_posts'])) {
         foreach ($export_data['custom_posts'] as $post_data) {
             $post_id = $post_data['ID'];
@@ -206,36 +241,29 @@ function import_custom_posts_from_file($file_path) {
                 continue;
             }
 
-
             $new_post_data = array(
-                'post_author',
-                'post_content',
-                'post_content_filtered',
-                'post_title',
-                'post_excerpt',
-                'post_status',
-                'post_type',
-                'comment_status',
-                'ping_status',
-                'post_password',
-                'to_ping',
-                'pinged',
-                'post_parent',
-                'menu_order',
-                'guid',
-                'import_id',
-                'context',
-                'post_date',
-                'post_date_gmt',
-                'featured_image_url'
+                'post_author' => $post_data['post_author'],
+                'post_content' => $post_data['post_content'],
+                'post_content_filtered' => $post_data['post_content_filtered'],
+                'post_title' => $post_data['post_title'],
+                'post_excerpt' => $post_data['post_excerpt'],
+                'post_status' => $post_data['post_status'],
+                'post_type' => $post_data['post_type'],
+                'comment_status' => $post_data['comment_status'],
+                'ping_status' => $post_data['ping_status'],
+                'post_password' => $post_data['post_password'],
+                'to_ping' => $post_data['to_ping'],
+                'pinged' => $post_data['pinged'],
+                'post_parent' => $post_data['post_parent'],
+                'menu_order' => $post_data['menu_order'],
+                'guid' => $post_data['guid'],
+                'import_id' => $post_data['import_id'],
+                'context' => $post_data['context'],
+                'post_date' => $post_data['post_date'],
+                'post_date_gmt' => $post_data['post_date_gmt'],
+                'featured_image_url' => $post_data['featured_image_url']
             );
-        
-            foreach ($new_post_data as $key) {
-                $value = isset($post_data[$key]) ? $post_data[$key] : '';
-                $new_post_data[$key] = $value;
-            }
 
-            
             $new_post_id = wp_insert_post($new_post_data);
 
             // Check if post creation was successful
@@ -243,13 +271,6 @@ function import_custom_posts_from_file($file_path) {
                 error_log('Failed to insert new post: ' . $new_post_id->get_error_message());
                 continue; // Skip to next post
             }
-
-            // // Set post meta
-            // if (isset($post_data['meta']) && is_array($post_data['meta'])) {
-            //     foreach ($post_data['meta'] as $meta_key => $meta_value) {
-            //         update_post_meta($new_post_id, $meta_key, $meta_value);
-            //     }
-            // }
 
             // Assign taxonomy terms
             if (isset($post_data['taxonomy_terms']) && is_array($post_data['taxonomy_terms'])) {
@@ -273,10 +294,9 @@ function import_custom_posts_from_file($file_path) {
 
     // Import custom table data
     if (isset($export_data['custom_table'])) {
-
-        // phpcs:disable
-        if ($wpdb->get_var($wpdb->prepare("SHOW TABLES LIKE %i", $table_name)) != $table_name) {
-            error_log('no custom_table found');
+        // Check if table exists and create if not
+        if ($wpdb->get_var($wpdb->prepare("SHOW TABLES LIKE %s", $table_name)) != $table_name) {
+            error_log('No custom_table found');
             $charset_collate = $wpdb->get_charset_collate();
             $sql = "CREATE TABLE $table_name (
                 id mediumint(9) NOT NULL AUTO_INCREMENT,
@@ -296,11 +316,9 @@ function import_custom_posts_from_file($file_path) {
             require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
             dbDelta($sql);
         }
-        // phpcs:enable
 
         foreach ($export_data['custom_table'] as $entry) {
             // Sanitize each entry before insertion
-
             $sanitized_entry = array(
                 'id' => intval($entry['id']),
                 'post_id' => intval($entry['post_id']),
@@ -315,18 +333,15 @@ function import_custom_posts_from_file($file_path) {
                 'zip' => sanitize_text_field($entry['zip'])
             );
 
-        
-           // Check if entry with the same ID exists
-           // phpcs:disable
-            $existing_entry = $wpdb->get_row($wpdb->prepare("SELECT * FROM %i WHERE id = %d", $table_name, $sanitized_entry['id']));
-            // phpcs:enable
-        
+            // Check if entry with the same ID exists
+            $existing_entry = $wpdb->get_row($wpdb->prepare("SELECT * FROM $table_name WHERE id = %d", $sanitized_entry['id']));
+
             if ($existing_entry) {
                 // Entry with the same ID already exists, skip insertion
-                error_log('Entry with the same ID already exists, skip insertion');
+                error_log('Entry with the same ID already exists, skipping insertion');
                 continue;
             }
-        
+
             $format = array(
                 '%d',
                 '%s',
@@ -340,22 +355,19 @@ function import_custom_posts_from_file($file_path) {
                 '%s'
             );
 
-            // phpcs:disable
-            $wpdb->insert($table_name, $sanitized_entry, $format);  
-            // phpcs:enable
+            $wpdb->insert($table_name, $sanitized_entry, $format);
 
             if (isset($entry['timestamp'])) {
                 // Retrieve the ID of the inserted row
                 $inserted_id = $wpdb->insert_id;
-            
+
                 // Convert timestamp to Unix timestamp
                 $unix_timestamp = strtotime($entry['timestamp']);
-            
+
                 // Format Unix timestamp into MySQL-compatible datetime format
                 $mysql_datetime = gmdate('Y-m-d H:i:s', $unix_timestamp);
-            
+
                 // Update the timestamp of the inserted row
-                // phpcs:disable
                 $wpdb->update(
                     $table_name,
                     array('timestamp' => $mysql_datetime),
@@ -363,15 +375,13 @@ function import_custom_posts_from_file($file_path) {
                     array('%s'), // Format for datetime
                     array('%d') // Format for ID
                 );
-               // phpcs:enable
             }
-        
-
         }
     }
 
     return 0;
 }
+
 
 
 // Function to render the Boat Configurator admin page

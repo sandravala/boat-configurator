@@ -22,7 +22,7 @@
 		"src/assets",
 		"src/front-end",
 		"src/includes/configurator",
-		"vendor",
+		"lib",
 		"composer.json",
 		"composer.lock",
 		"boat-configurator.php",

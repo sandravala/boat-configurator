@@ -17,6 +17,15 @@ if (!defined('ABSPATH')) {
     exit; // Exit if accessed directly.
 }
 
+require_once plugin_dir_path(__FILE__) . 'lib/vendor/autoload.php';
+require_once plugin_dir_path(__FILE__) . 'src/front-end/form-submissions.php';
+require_once plugin_dir_path(__FILE__) . 'src/admin/form-entries-list.php';
+require_once plugin_dir_path(__FILE__) . 'src/admin/key-encryption.php';
+require_once plugin_dir_path(__FILE__) . 'src/admin/settings-page.php';
+require_once plugin_dir_path(__FILE__) . 'src/includes/configurator/boat-config-pattern.php';
+require_once plugin_dir_path(__FILE__) . 'src/includes/configurator/boat-config-post-type.php';
+
+
 /**
  * Registers the block using the metadata loaded from the `block.json` file.
  * Behind the scenes, it registers also all assets so they can be enqueued
@@ -115,11 +124,4 @@ function enqueue_custom_script() {
 }
 add_action('admin_enqueue_scripts', 'enqueue_custom_script');
 
-// Include the file with the form submission handling function
-require_once plugin_dir_path(__FILE__) . 'src/front-end/form-submissions.php';
-require_once plugin_dir_path(__FILE__) . 'src/admin/form-entries-list.php';
-require_once plugin_dir_path(__FILE__) . 'src/admin/key-encryption.php';
-require_once plugin_dir_path(__FILE__) . 'src/admin/settings-page.php';
-require_once plugin_dir_path(__FILE__) . 'src/includes/configurator/boat-config-pattern.php';
-require_once plugin_dir_path(__FILE__) . 'src/includes/configurator/boat-config-post-type.php';
-require_once plugin_dir_path(__FILE__) . 'vendor/autoload.php';
+

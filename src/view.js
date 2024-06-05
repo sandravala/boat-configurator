@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import ReactDOM from 'react-dom';
+import { createRoot } from 'react-dom/client';
 
 
 document.addEventListener('DOMContentLoaded', function () {
@@ -13,7 +13,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
 function renderForm(questionsData) {
     const bcDiv = document.getElementsByClassName('wp-block-create-block-boat-configurator')[0];
-    ReactDOM.render(<BoatConfig {...questionsData} />, bcDiv);
+    const root = createRoot(bcDiv);
+    root.render(<BoatConfig {...questionsData} />);
 }
 
 
@@ -273,7 +274,6 @@ function BoatConfig(questionsData) {
             ...prev,
             [questionIdentifier]: answer
         }));
-
     };
 
     const handleSubmit = (e) => {
@@ -360,7 +360,7 @@ function BoatConfig(questionsData) {
                                 <span style={{ width: `${progress}%` }}></span>
                             </div>
                         </div>
-                        <div key={currentIndex} class={`question-container ${currentIndex === questionsData.questions.length - 1 ? 'contact' : ''}`}>
+                        <div key={currentIndex} className={`question-container ${currentIndex === questionsData.questions.length - 1 ? 'contact' : ''}`}>
                             {currentIndex <= questionsData.questions.length - 1 ? (
 
 
@@ -371,17 +371,18 @@ function BoatConfig(questionsData) {
 
                             )}
 
-                            <div class={`options-container ${currentIndex === questionsData.questions.length - 1 ? 'contact' : ''}`}>
+                            <div className={`options-container ${currentIndex === questionsData.questions.length - 1 ? 'contact' : ''}`}>
 
                                 {currentIndex <= questionsData.questions.length - 1 ? (
                                     question.options.map((option, optionIndex) => (
-                                        <label key={optionIndex} class="option-label">
+                                        <label key={`${question.text}_${optionIndex}`} className="option-label">
                                             <input
                                                 type="radio"
                                                 name={question.text}
                                                 value={option.optionText}
                                                 id={`${currentIndex}_${optionIndex}`}
                                                 onChange={() => updateAnswers(question.text, option)}
+                                                className={ answers[question.text]?.optionText === option.optionText ? 'chosen' : ''}
                                             />
                                             <div className="card">
                                                 <div className="top-text">
@@ -396,14 +397,14 @@ function BoatConfig(questionsData) {
                                     ))
                                 ) : (
                                     <>
-                                        {contactFormFields.map((field, fieldindex) => (
+                                        {contactFormFields.map((field, fieldIndex) => (
 
-                                            <div className='contact-row'>
-                                                <div class="col-5">
-                                                    <label class="input-bc-custom">
+                                            <div className='contact-row' key={`${field.id}_${fieldIndex}`}>
+                                                <div className="col-5">
+                                                    <label className="input-bc-custom">
                                                         {field.type !== 'select' ?
                                                             <input
-                                                                class="input-bc-custom__field"
+                                                                className="input-bc-custom__field"
                                                                 type={field.type}
                                                                 placeholder=" "
                                                                 style={{ fontSize: "20px", borderColor: errors[field.id] ? 'red' : ''  }}
@@ -415,7 +416,7 @@ function BoatConfig(questionsData) {
                                                             />
                                                             :
                                                             <select
-                                                                class="input-bc-custom__field"
+                                                                className="input-bc-custom__field"
                                                                 type={field.type}
                                                                 placeholder=" "
                                                                 style={{ fontSize: "20px", borderColor: errors[field.id] ? 'red' : '' }}
@@ -426,12 +427,12 @@ function BoatConfig(questionsData) {
                                                                 {...field.required}
                                                             >
                                                                 {field.options.map((option, optionIndex) => (
-                                                                    <option value={option.value}>{option.text}</option>
+                                                                    <option key={`${option.value}_${optionIndex}`} value={option.value}>{option.text}</option>
                                                                 ))}
                                                             </select>
                                                         }
 
-                                                        <span class="input-bc-custom__label">{field.label}</span>
+                                                        <span className="input-bc-custom__label">{field.label}</span>
                                                     </label>
                                                     {errors[field.id] && <span style={{ color: 'red' }}>{errors[field.id]}</span>}
                                                 </div>
@@ -441,11 +442,11 @@ function BoatConfig(questionsData) {
 
                                         {[{ id: 'subscribe', text: 'Embrace the future of boating by subscribing to receive updates from Hendrixon. Be the first to learn about new product launches, exclusive events, and more. By selecting "I agree," you authorize Hendrixon and our trusted partners to utilize your personal information for marketing and promotional activities. Set sail on a journey of innovation and luxury with us—where every update brings you closer to the voyage of your dreams.' },
                                         { id: 'agreePolicies', text: 'By clicking this box, I acknowledge and accept the ' }].map((checkbox, chId) => (
-                                            <div className='contact-row'>
-                                                <div class="col-5">
-                                                    <label class="input-bc-custom" style={{ display: 'flex', alignItems: 'flex-start' }}>
+                                            <div key={`${checkbox.id}_${chId}`} className='contact-row'>
+                                                <div className="col-5">
+                                                    <label className="input-bc-custom" style={{ display: 'flex', alignItems: 'flex-start' }}>
                                                         <input
-                                                            class="input-bc-custom__field"
+                                                            className="input-bc-custom__field"
                                                             type='checkbox'
                                                             placeholder=" "
                                                             style={{ fontSize: "20px", width: 'auto' }}
@@ -469,7 +470,7 @@ function BoatConfig(questionsData) {
 
                                         {!answers.agreePolicies && 
                                         <div className='contact-row'>
-                                            <div class="col-5">
+                                            <div className="col-5">
                                                 <span style={{ color: 'red', fontSize: '10px', paddingLeft: '28px' }}>You have to agree to Terms and Policies to proceed</span>
                                             </div>
                                         </div>                                        
@@ -482,21 +483,21 @@ function BoatConfig(questionsData) {
                             </div>
                         </div>
 
-                        <div class={` pagination-footer ${currentIndex === 0 ? 'previous-disabled' : ''}`}>
-                            <button type="button" class="previous" onClick={handlePrevClick} disabled={currentIndex === 0}>Previous</button>
-                            <button type="button" class="next" onClick={handleNextClick} disabled={currentIndex > questionsData.questions.length - 1}>Next</button>
-                            {currentIndex > questionsData.questions.length - 1 && <button type="submit" id="submit_form" class="next" onClick={handleSubmit} disabled={false}>Submit</button>}
+                        <div className={` pagination-footer ${currentIndex === 0 ? 'previous-disabled' : ''}`}>
+                            <button type="button" className="previous" onClick={handlePrevClick} disabled={currentIndex === 0}>Previous</button>
+                            <button type="button" className="next" onClick={handleNextClick} disabled={currentIndex > questionsData.questions.length - 1}>Next</button>
+                            {currentIndex > questionsData.questions.length - 1 && <button type="submit" id="submit_form" className="next" onClick={handleSubmit} disabled={false}>Submit</button>}
                         </div>
                     </div>
                 </form>
             }
             {
                 formSubmitting &&
-                <div class="form-submit-message">
+                <div className="form-submit-message">
 
                     {formSubmitMessage === '' &&
                         <>
-                            <div class="loader"></div>
+                            <div className="loader"></div>
                             <div><p>Form is submitting...</p></div>
                         </>
                     }
@@ -505,13 +506,13 @@ function BoatConfig(questionsData) {
                             <p>{formSubmitMessage}</p>
                             {formSubmitSuccess &&
                                 <div>
-                                    <button type="button" class="previous" onClick={() => location.href = questionsData.homePage} >Go to Main page</button>
-                                    <button type="button" class="next" onClick={() => location.href = questionsData.boatConfigArchive} >Configure More Boats</button>
+                                    <button type="button" className="previous" onClick={() => location.href = questionsData.homePage} >Go to Main page</button>
+                                    <button type="button" className="next" onClick={() => location.href = questionsData.boatConfigArchive} >Configure More Boats</button>
                                 </div>
                             }
                             {!formSubmitSuccess &&
                                 <div>
-                                    <button type="button" class="previous" onClick={() => location.reload()} >Try Again</button>
+                                    <button type="button" className="previous" onClick={() => location.reload()} >Try Again</button>
                                 </div>
                             }
                         </>
